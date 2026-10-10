@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>교수자 안내 | 확률변수 실험실</title>
+<meta name="description" content="모듈 1을 수업에서 쓰는 방법: 수업 시나리오, 단계별 발문, 바로 열리는 화면 링크, 발표 모드.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  .plan { border-collapse: collapse; width: 100%; font-size: 0.94rem; margin: 1em 0; }
+  .plan th, .plan td { border-bottom: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  .plan th { color: var(--ink-3); font-weight: 600; font-size: 0.86rem; }
+  .plan td:first-child { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .table-wrap { overflow-x: auto; }
+  kbd { border: 1px solid var(--line-strong); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; font: 0.88em var(--font-body); background: var(--surface); }
+</style>
+</head>
+<body>
+<header data-shell-header data-current="teacher" data-root="../"></header>
+<main class="page">
+  <article class="prose">
+    <p class="crumb">교수자 안내</p>
+    <h1 style="font-size:clamp(1.7rem,1.2rem+1.8vw,2.4rem)">수업에서 쓰는 법</h1>
+    <p>모듈 1(히스토그램에서 분포로), 모듈 2(누적분포함수), 모듈 3(확률변수란 무엇인가), 모듈 4(측도론과 확률분포)의 수업 예시와 발문, 바로 열리는 화면을 모았습니다. 확률을 처음 배우는 수업이라면 <b>모듈 3 → 모듈 1 → 모듈 2</b> 순서도 좋습니다.</p>
+
+    <h2>모듈 1: 50분 수업 예시</h2>
+
+    <div class="table-wrap">
+    <table class="plan">
+      <thead><tr><th>시간</th><th>화면</th><th>진행</th></tr></thead>
+      <tbody>
+        <tr><td>0–8분</td><td>연속형 1단계</td><td>‘하나씩 뽑기’로 난수 100개가 떨어지는 모습을 보여 준 뒤 n을 1,000, 10,000으로 바꿉니다. “두 그림을 어떻게 비교할까?”를 묻습니다.</td></tr>
+        <tr><td>8–15분</td><td>연속형 2단계</td><td>상대도수로 바꾸고 Δx를 반으로 줄입니다. 점선(직전 상태)과 비교해 높이가 절반이 되는 것을 확인합니다.</td></tr>
+        <tr><td>15–23분</td><td>연속형 3단계</td><td>밀도로 바꾸고 다시 쪼갭니다. 막대 하나에 마우스를 올려 계산 과정을 함께 읽습니다. 면적 합계가 1인 이유를 학생이 말하게 합니다.</td></tr>
+        <tr><td>23–33분</td><td>연속형 4단계</td><td>먼저 ‘n = 100에서 Δx만 아주 작게’를 눌러 실패를 보여 주고, ‘극한으로 가기’를 재생합니다. 끝나면 학생들에게 곡선을 예상하게 한 뒤 ‘이상적인 곡선 보기’로 공개합니다.</td></tr>
+        <tr><td>33–42분</td><td>연속형 5단계</td><td>구간 확률 세 값을 비교하고 ‘한 점으로 좁히기’를 누릅니다. 균등(0, 0.5)에서 f(x) = 2를 보여 주고 “이것이 확률인가?”를 묻습니다.</td></tr>
+        <tr><td>42–50분</td><td>이산형 3·4단계</td><td>같은 쪼개기를 이산형에서 하면 막대가 끝없이 높아지는 것을 보여 주고, 확률질량함수와 끝점 포함 여부로 마무리합니다.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2>모듈 2: 50분 수업 예시</h2>
+    <div class="table-wrap">
+    <table class="plan">
+      <thead><tr><th>시간</th><th>화면</th><th>진행</th></tr></thead>
+      <tbody>
+        <tr><td>0–8분</td><td>연속형 1단계</td><td>‘하나씩 뽑기’로 지수분포 난수 10개를 뽑으며 계단이 1/10씩 올라가는 것을 보여 줍니다. 커서를 움직여 “x 이하인 표본의 비율”을 읽게 합니다.</td></tr>
+        <tr><td>8–16분</td><td>연속형 2단계</td><td>n을 키워 가며 ECDF가 매끄러워지는 것을 보고, ‘히스토그램과 비교’로 “구간 폭을 고르지 않아도 된다”는 점을 짚습니다. 최대 거리 Dₙ이 1/√n 속도로 준다는 것을 수렴 그래프로 확인합니다.</td></tr>
+        <tr><td>16–26분</td><td>연속형 3·4단계</td><td>위 그래프의 넓이와 아래 그래프의 높이가 함께 움직이는 것을 보여 준 뒤, 접선의 기울기가 위 그래프의 밀도와 같다는 것을 확인합니다.</td></tr>
+        <tr><td>26–34분</td><td>연속형 5단계</td><td>중앙값·사분위수 버튼으로 분위수를 거꾸로 읽고, 구간 모드에서 F(b) − F(a)를 확인합니다.</td></tr>
+        <tr><td>34–42분</td><td>연속형 6단계</td><td>균등난수 하나를 보내는 애니메이션을 두세 번 본 뒤 1,000개를 보내 히스토그램이 지수분포가 되는 것을 확인합니다. “사이트의 지수분포 난수가 실제로 이렇게 만들어진다”고 알려 줍니다.</td></tr>
+        <tr><td>42–50분</td><td>이산형 3·4단계</td><td>점프 위치의 열린 점과 닫힌 점으로 F(3)과 F(3⁻)를 구분하고, 끝점 규칙 네 가지를 표로 정리합니다.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2>모듈 3: 50분 수업 예시</h2>
+    <div class="table-wrap">
+    <table class="plan">
+      <thead><tr><th>시간</th><th>화면</th><th>진행</th></tr></thead>
+      <tbody>
+        <tr><td>0–7분</td><td>주사위와 동전 1단계</td><td>학생들에게 “두 눈의 합이 7”인 칸을 직접 눌러 사건을 만들게 하고, 확률이 칸 수 ÷ 36임을 확인합니다.</td></tr>
+        <tr><td>7–17분</td><td>2·3단계</td><td>칸마다 숫자가 붙는 것을 보여 주고 “확률변수는 함수”라는 말을 칠판에 씁니다. 규칙을 합 → 최댓값 → 지시변수로 바꾸며 같은 실험에서 분포가 달라지는 것을 비교합니다.</td></tr>
+        <tr><td>17–25분</td><td>4단계</td><td>값 7을 눌러 역상을 보고, ‘x를 왼쪽부터 키우기’로 {X ≤ x}의 칸이 늘어나는 것과 아래 계단(CDF)이 함께 올라가는 것을 보여 줍니다.</td></tr>
+        <tr><td>25–31분</td><td>5단계</td><td>실험을 반복해 상대도수가 분포로 다가가는 것을 보고, 확률변수를 바꿔도 같은 실험 결과가 그대로 쓰인다는 점을 짚습니다.</td></tr>
+        <tr><td>31–42분</td><td>정사각형 2·3단계</td><td>u + v의 값 띠와 삼각형 분포를 비교하고, max(u, v) ≤ x가 한 변 x인 정사각형이라 F(x) = x²임을 넓이로 보여 줍니다. ‘미분해 보기’로 f(x) = 2x를 얻습니다.</td></tr>
+        <tr><td>42–50분</td><td>정사각형 4단계</td><td>Y = U²에서 같은 확률 0.1의 칸이 0 근처에서 좁게 눌려 밀도가 커지는 것을 보고, Y = −ln U가 지수분포가 되는 것을 모듈 2의 역변환과 연결합니다.</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2>모듈 4: 측도론 수업 예시 (75분, 수리통계 입문)</h2>
+    <p>모듈 4는 해석학 기초(극한, 리만 적분)를 아는 학부 고학년·대학원 신입생을 위한 것입니다. 증명보다 “왜 이 정의가 필요한가”를 화면으로 먼저 보이고, 정리는 단계 카드의 ‘수식으로 보기’와 <a href="../notes/lecture4.html">강의노트 4</a>로 넘깁니다.</p>
+    <div class="table-wrap">
+    <table class="plan">
+      <thead><tr><th>시간</th><th>화면</th><th>진행</th></tr></thead>
+      <tbody>
+        <tr><td>0–10분</td><td>4A 1단계</td><td>정규 → 이항 → 대기 시간 → 칸토어 순서로 바꾸며 “분포 = Ω의 확률을 X가 옮겨 쌓은 측도”를 보입니다. CDF의 세로축이 Ω라는 점을 강조합니다.</td></tr>
+        <tr><td>10–20분</td><td>4A 2·3단계</td><td>표에서 ‘이항 × λ’, ‘이항 × 셈측도’, ‘대기 시간 × δ₀ + λ’를 차례로 눌러 PMF와 PDF가 같은 개념(라돈–니코딤 도함수)임을 정리하고, 칸토어 히스토그램이 k를 키울수록 (3/2)ᵏ로 폭발하는 것을 보입니다.</td></tr>
+        <tr><td>20–28분</td><td>4A 4·5단계</td><td>르베그 분해 프리셋 네 개를 눌러 CDF 모양을 비교하고, 유리수 덮기로 “셀 수 있는 집합의 측도 0”과 σ-대수의 필요성을 짚습니다.</td></tr>
+        <tr><td>28–45분</td><td>4B 1~4단계</td><td>칸토어 평균 1/2을 층 케이크로 구하고, (a) 반례로 lim E ≠ E lim을, 타자기 수열로 확률수렴과 a.s. 수렴의 차이를, 동전 경로로 강한 대수의 법칙을 보입니다.</td></tr>
+        <tr><td>45–60분</td><td>4C 1·2단계</td><td>0 과잉 자료에서 기준 측도를 잘못 고르면 λ̂가 1.67배가 되는 것을 보이고, c = 5에서 단순 몬테카를로(모두 0)와 중요도 표본추출, 절단 제안분포의 편향을 비교합니다.</td></tr>
+        <tr><td>60–75분</td><td>4C 3·4단계</td><td>학생에게 계단을 끌어 오차를 줄여 보게 한 뒤 “평균이 최적”임을 사영으로 정리하고, 라오–블랙웰 산점도에서 T별 δ의 평균이 (1 − 1/n)ᵀ에 놓이는 것을 확인합니다.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <h3>모듈 4 발문</h3>
+    <ul>
+      <li><b>4A 2단계</b>: “이항분포의 ‘밀도’는 무엇인가? 무엇에 대한 밀도인가?”</li>
+      <li><b>4A 3단계</b>: “점 하나의 확률이 0이면 밀도가 있는가?” (칸토어: 아니다)</li>
+      <li><b>4B 2단계</b>: “추정량이 확률 1로 참값에 수렴하면 편향도 0으로 가는가?”</li>
+      <li><b>4C 3단계</b>: “관측할 수 있는 정보가 ‘ω가 어느 칸에 있는가’뿐이라면, X를 가장 잘 맞히는 방법은?”</li>
+    </ul>
+    <h3>모듈 4 바로 열리는 화면</h3>
+    <ul>
+      <li><a href="../module4/why.html?step=3&amp;seed=2026">칸토어 분포 히스토그램 (4A 3단계)</a></li>
+      <li><a href="../module4/limits.html?step=2&amp;seed=2026">극한과 기댓값의 순서 (4B 2단계)</a></li>
+      <li><a href="../module4/stats.html?step=2&amp;seed=2026">중요도 표본추출 (4C 2단계)</a></li>
+      <li><a href="../module4/stats.html?step=4&amp;seed=2026">라오–블랙웰 (4C 4단계)</a></li>
+    </ul>
+
+    <h2>강의노트</h2>
+    <p>학습자용 강의노트는 <a href="../notes/lecture.html">모듈 1</a>, <a href="../notes/lecture2.html">모듈 2</a>, <a href="../notes/lecture3.html">모듈 3</a>, <a href="../notes/lecture4.html">모듈 4</a>로 나뉘어 있고, 각각 사이트의 단계와 같은 순서로 쓰여 있어 예습·복습 자료로 쓸 수 있습니다. 브라우저의 인쇄 기능으로 PDF를 만들면 목차와 링크 상자는 빠지고 장마다 새 쪽에서 시작합니다. 연습문제 풀이도 인쇄본에는 펼쳐진 채로 들어갑니다. 3장(표본 변동)은 “균등분포인데 왜 막대가 고르지 않으냐”는 질문에 대한 답으로 쓰기 좋습니다.</p>
+
+    <h2>단계별 발문</h2>
+    <ul>
+      <li><b>연속형 2단계</b>: “구간을 계속 잘게 쪼개면 상대도수 막대는 결국 어디로 갈까?” (모두 0으로 간다)</li>
+      <li><b>연속형 3단계</b>: “밀도 히스토그램에서 높이 0.4는 무슨 뜻인가?” (x 한 단위당 확률 0.4 정도)</li>
+      <li><b>연속형 4단계</b>: “표본 100개로 구간 160개를 만들면 한 구간에 평균 몇 개가 들어가나?” (1개 미만)</li>
+      <li><b>연속형 5단계</b>: “키가 정확히 170.000…cm인 사람이 있을 확률은?”</li>
+      <li><b>이산형 3단계</b>: “연속형에서는 쪼개도 높이가 유지됐는데, 여기서는 왜 아닐까?”</li>
+    </ul>
+
+    <ul>
+      <li><b>모듈 2 연속형 2단계</b>: “히스토그램은 구간을 바꾸면 모양이 바뀌는데, ECDF는 왜 하나뿐일까?”</li>
+      <li><b>모듈 2 연속형 4단계</b>: “CDF가 가장 가파른 곳은 PDF의 어디에 해당하는가?”</li>
+      <li><b>모듈 2 이산형 3단계</b>: “F(3)과 F(2.999)의 차이는 무엇을 뜻하는가?”</li>
+      <li><b>모듈 3 2단계</b>: “확률변수가 ‘변수’가 아니라 ‘함수’라면, 그 함수의 정의역과 공역은 무엇인가?”</li>
+      <li><b>모듈 3 4단계</b>: “{X ≤ 4}는 실수의 집합인가, 표본공간의 집합인가?”</li>
+      <li><b>모듈 3 정사각형 3단계</b>: “원점까지 거리 X에서 {X ≤ 0.5}의 넓이는?” (π/16 ≈ 0.196)</li>
+    </ul>
+
+    <h2>바로 열리는 화면</h2>
+    <p>각 화면의 상태(단계, 분포, 모수, n, 구간 폭, 시드, 세로축)는 주소에 담깁니다. 수업 자료에 링크를 넣어 두면 누가 열어도 같은 그림이 나옵니다. 화면 오른쪽 위의 ‘링크 복사’로 지금 보고 있는 상태를 복사할 수 있습니다.</p>
+    <ul>
+      <li><a href="../module1/continuous.html?step=4&amp;d=normal&amp;p=mu:0;sigma:1&amp;n=100&amp;seed=2026&amp;k=160&amp;y=density&amp;nest=1&amp;o=p">n = 100에서 구간 160개 (들쭉날쭉한 히스토그램)</a></li>
+      <li><a href="../module1/continuous.html?step=4&amp;d=normal&amp;p=mu:0;sigma:1&amp;n=1000000&amp;seed=2026&amp;k=160&amp;y=density&amp;r=scott&amp;nest=1&amp;o=pt">n = 1,000,000, Scott 규칙, 이론 곡선</a></li>
+      <li><a href="../module1/lab.html?d=mixture&amp;p=w:0.5;delta:4&amp;n=20000&amp;seed=2026&amp;k=6&amp;y=density&amp;o=t">이봉분포를 구간 6개로 그리면 봉우리가 사라진다</a></li>
+      <li><a href="../module1/continuous.html?step=5&amp;d=uniform&amp;p=a:0;b:0.5&amp;n=10000&amp;seed=2026&amp;k=20&amp;y=density&amp;r=scott&amp;o=t&amp;iv=0.1,0.3,1,1">밀도가 2인 균등분포 U(0, 0.5)</a></li>
+      <li><a href="../module1/discrete.html?step=3&amp;d=binomial&amp;p=N:10;p:0.3&amp;n=10000&amp;seed=2026&amp;m=20&amp;y=density">이산형에서 Δx = 1/20 (밀도 발산)</a></li>
+      <li><a href="../module1/discrete.html?step=4&amp;d=binomial&amp;p=N:10;p:0.3&amp;n=10000&amp;seed=2026&amp;m=1&amp;y=rel&amp;o=t&amp;iv=0,3,1,0">이항분포 P(X &lt; 3)</a></li>
+      <li><a href="../module2/continuous.html?step=2&amp;d=exponential&amp;p=lambda:1&amp;n=100&amp;seed=2026&amp;top=rug&amp;k=30&amp;o=ecd&amp;c=x&amp;cx=0.5">모듈 2: n = 100의 ECDF와 이론 CDF, 최대 거리 Dₙ</a></li>
+      <li><a href="../module2/lab.html?d=waiting&amp;p=q:0.3;lambda:1&amp;n=1000&amp;seed=2026&amp;top=rug&amp;k=30&amp;o=ecb&amp;c=x&amp;cx=0.5">모듈 2: 혼합분포(상담 대기 시간)와 DKW 신뢰띠</a></li>
+      <li><a href="../module3/discrete.html?step=4&amp;sp=dice2&amp;x=max&amp;ev=eq&amp;v=6&amp;seed=2026&amp;o=c">모듈 3: 최댓값이 6인 결과 11칸 (역상)</a></li>
+      <li><a href="../module3/continuous.html?step=3&amp;sp=square&amp;x=dist&amp;t=0.5&amp;n=1000&amp;seed=2026&amp;o=c">모듈 3: 원점까지 거리 ≤ 0.5인 영역 (넓이 π/16)</a></li>
+      <li><a href="../module3/lab.html?sp=dice2&amp;x=sum&amp;w=0.1,0.1,0.1,0.1,0.1,0.5&amp;n=10000&amp;seed=2026&amp;o=bc&amp;m=bands">모듈 3: 6이 잘 나오는 주사위의 합</a></li>
+    </ul>
+
+    <h2>강의실에서</h2>
+    <ul>
+      <li><b>발표 모드</b>(오른쪽 위 버튼): 글자와 축 눈금이 커지고 메뉴가 숨겨집니다.</li>
+      <li><b>단계 이동</b>: 입력란 밖에서 <kbd>←</kbd> <kbd>→</kbd> 또는 <kbd>PageUp</kbd> <kbd>PageDown</kbd>을 누르면 이전·다음 단계로 갑니다. 프레젠터 리모컨으로도 넘길 수 있습니다.</li>
+      <li><b>같은 결과 재현</b>: 시드가 같으면 언제나 같은 난수가 나옵니다. 학생마다 다른 결과를 보게 하려면 ‘새 난수로 다시 뽑기’를 누르게 하세요.</li>
+      <li><b>인터넷 없이</b>: 폴더째 복사해 <code>index.html</code>을 브라우저로 열면 그대로 동작합니다. 글꼴만 시스템 글꼴로 바뀝니다.</li>
+      <li><b>표로 보기</b>: 차트 아래 ‘표로 보기’를 펼치면 구간별 도수·상대도수·밀도를 숫자로 볼 수 있어 화면을 보기 어려운 학생에게도 도움이 됩니다.</li>
+    </ul>
+  </article>
+</main>
+<footer class="site-footer"><p>확률변수 실험실 교수자 안내.</p></footer>
+<script src="../js/core/shell.js"></script>
+</body>
+</html>

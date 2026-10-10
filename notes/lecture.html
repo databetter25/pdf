@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>강의노트: 히스토그램에서 확률분포로 | 확률변수 실험실</title>
+<meta name="description" content="확률변수, 히스토그램, 표본 변동, 밀도, 확률밀도함수, 확률질량함수를 시뮬레이션 그림과 함께 설명하는 강의노트와 연습문제.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  .lec-wrap { max-width: 1180px; margin: 0 auto; padding: 28px clamp(16px, 3vw, 32px) 64px; display: grid; gap: 32px; grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 1080px) { .lec-wrap { grid-template-columns: 240px minmax(0, 1fr); } }
+  .toc { font-size: 0.9rem; }
+  @media (min-width: 1080px) { .toc { position: sticky; top: 16px; align-self: start; max-height: calc(100vh - 32px); overflow: auto; } }
+  .toc h2 { font-family: var(--font-body); font-size: 0.86rem; color: var(--ink-3); font-weight: 600; margin-bottom: 6px; }
+  .toc ol { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--line); }
+  .toc a { display: block; padding: 4px 10px; color: var(--ink-2); text-decoration: none; margin-left: -2px; border-left: 2px solid transparent; line-height: 1.45; }
+  .toc a:hover { color: var(--ink); }
+  .toc a.active { color: var(--accent); border-left-color: var(--accent); font-weight: 600; }
+  .lecture { max-width: 74ch; }
+  .lecture > h1 { font-size: clamp(1.8rem, 1.2rem + 2vw, 2.6rem); line-height: 1.25; }
+  .lecture .sub { color: var(--ink-2); font-size: 1.05rem; margin: 10px 0 22px; }
+  .lecture h2 { font-size: 1.55rem; margin: 2.6em 0 0.5em; padding-top: 0.6em; border-top: 1px solid var(--line-strong); scroll-margin-top: 12px; }
+  .lecture h3 { font-size: 1.16rem; margin: 1.8em 0 0.4em; }
+  .lecture p, .lecture li { line-height: 1.85; }
+  .lecture .katex-display { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
+  .goals { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 18px; }
+  .goals h3 { margin: 0 0 4px; font-size: 1rem; }
+  .goals ul { margin: 0; padding-left: 1.2em; }
+  .def, .thm { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 1.2em 0; }
+  .thm { border-left-color: var(--series-3); }
+  .def > b:first-child, .thm > b:first-child { display: block; font-size: 0.86rem; color: var(--ink-3); margin-bottom: 2px; }
+  .try { display: flex; gap: 10px; align-items: baseline; background: var(--accent-soft); border-radius: 8px; padding: 10px 14px; margin: 1.2em 0; font-size: 0.95rem; }
+  .try b { flex: none; color: var(--accent); }
+  .try p { margin: 0; line-height: 1.7; }
+  .ex { border: 1px dashed var(--line-strong); border-radius: 8px; padding: 12px 16px; margin: 1.2em 0; }
+  .ex > b:first-child { display: block; font-size: 0.86rem; color: var(--ink-3); }
+  .lt { border-collapse: collapse; width: 100%; font-size: 0.93rem; margin: 1em 0; font-variant-numeric: tabular-nums; }
+  .lt th, .lt td { border-bottom: 1px solid var(--line); padding: 6px 10px; text-align: right; }
+  .lt th:first-child, .lt td:first-child { text-align: left; }
+  .lt thead th { color: var(--ink-3); font-weight: 600; font-size: 0.86rem; }
+  .lt.wide td, .lt.wide th { text-align: left; vertical-align: top; }
+  .tscroll { overflow-x: auto; }
+  figure.lf { margin: 1.4em 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px 8px; }
+  figure.lf figcaption { font-size: 0.88rem; color: var(--ink-2); margin-top: 6px; line-height: 1.6; }
+  figure.lf figcaption b { color: var(--ink); }
+  .lf-pair { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .lf-pair > div > p, .lfig-cell > p { margin: 0 0 2px; font-size: 0.84rem; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .lfig-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+  .whisk line { stroke: var(--ink); stroke-width: 1.4; }
+  .exercises ol > li { margin-bottom: 1.2em; }
+  .exercises details { margin-top: 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; }
+  .exercises summary { cursor: pointer; color: var(--accent); font-weight: 600; font-size: 0.92rem; }
+  .print-btn { margin-top: 4px; }
+  @media print {
+    .site-header, .toc, .site-footer, .print-btn, .try { display: none !important; }
+    body { background: #fff; font-size: 11pt; }
+    .lec-wrap { display: block; padding: 0; }
+    .lecture { max-width: none; }
+    .lecture h2 { break-before: page; border-top: 0; }
+    figure.lf, .def, .thm, .ex, table { break-inside: avoid; }
+    .exercises details { border: 0; padding: 0; }
+    .exercises details > summary { display: none; }
+  }
+</style>
+</head>
+<body>
+<header data-shell-header data-current="lecture" data-root="../"></header>
+
+<div class="lec-wrap">
+  <nav class="toc" aria-label="목차">
+    <h2>목차</h2>
+    <ol id="toc-list"></ol>
+  </nav>
+
+  <article class="lecture">
+    <p class="crumb">강의노트 모듈 1</p>
+    <h1>히스토그램에서 확률분포로</h1>
+    <p class="sub">확률변수, 표본 변동, 밀도, 확률밀도함수와 확률질량함수를 시뮬레이션으로 이해하기</p>
+    <button type="button" class="print-btn ghost-btn" onclick="window.print()">인쇄하거나 PDF로 저장</button>
+
+    <div class="goals" style="margin-top:18px">
+      <h3>이 강의노트를 마치면</h3>
+      <ul>
+        <li>확률변수가 무엇인지, 이산형과 연속형이 어떻게 다른지 설명할 수 있습니다.</li>
+        <li>도수·상대도수·밀도 히스토그램을 손으로 계산하고 서로 바꿀 수 있습니다.</li>
+        <li>표본이 작을 때 막대가 고르지 않은 이유를 이항분포로 설명하고, 그 차이가 정상 범위인지 판단할 수 있습니다.</li>
+        <li>확률밀도함수가 히스토그램의 두 극한에서 나온다는 것을 설명하고, 곡선 아래 넓이로 확률을 계산할 수 있습니다.</li>
+        <li>이산형에서 확률질량함수를 쓰는 이유와 끝점 포함 여부가 중요한 이유를 설명할 수 있습니다.</li>
+      </ul>
+    </div>
+    <p>각 절 끝의 <b>사이트에서 해 보기</b> 상자를 누르면 그 절의 내용을 그대로 재현한 시뮬레이션 화면이 열립니다. 본문의 그림도 모두 이 사이트의 난수 생성기로 실제로 뽑은 결과입니다.</p>
+
+    <!-- ───────────── 1장 ───────────── -->
+    <h2 id="ch1">1. 확률변수란 무엇인가</h2>
+    <h3>1.1 실험, 표본공간, 사건</h3>
+    <p>결과를 미리 알 수 없는 관찰을 <b>확률실험</b>이라고 합니다. 동전 던지기, 주사위 던지기, 내일 아침 통학 시간 재기가 모두 확률실험입니다. 일어날 수 있는 모든 결과의 모임을 <b>표본공간</b> $\Omega$라 하고, 표본공간의 부분집합을 <b>사건</b>이라고 합니다.</p>
+    <p>동전을 세 번 던지면 표본공간은 다음 8개의 결과로 이루어집니다.</p>
+    $$\Omega=\{HHH,\ HHT,\ HTH,\ THH,\ HTT,\ THT,\ TTH,\ TTT\}$$
+
+    <h3>1.2 결과에 수를 붙이는 규칙</h3>
+    <div class="def"><b>정의 1.1 확률변수</b>표본공간의 각 결과 $\omega$에 실수 하나를 대응시키는 규칙(함수) $X:\Omega\to\mathbb{R}$를 <b>확률변수</b>라고 합니다.</div>
+    <p>이름에 ‘변수’가 들어 있지만 확률변수는 사실 <b>함수</b>입니다. 동전 세 번 던지기에서 “앞면이 나온 횟수”를 $X$라 하면, $X(HHT)=2$, $X(TTT)=0$처럼 각 결과에 수가 붙습니다. 각 결과의 확률이 $1/8$이므로 $X$의 값별 확률은 다음과 같습니다.</p>
+    <div class="tscroll"><table class="lt">
+      <thead><tr><th>$X$의 값 $x$</th><th>0</th><th>1</th><th>2</th><th>3</th></tr></thead>
+      <tbody>
+        <tr><td>해당하는 결과</td><td>TTT</td><td>HTT, THT, TTH</td><td>HHT, HTH, THH</td><td>HHH</td></tr>
+        <tr><td>$P(X=x)$</td><td>1/8</td><td>3/8</td><td>3/8</td><td>1/8</td></tr>
+      </tbody>
+    </table></div>
+    <p>같은 표본공간에 다른 규칙을 붙이면 다른 확률변수가 됩니다. “처음으로 앞면이 나온 시행 번호”나 “앞면 수 − 뒷면 수”도 모두 확률변수입니다. 확률변수를 정하는 순간, 표본공간 위의 확률이 실수축 위의 확률로 옮겨집니다. 이렇게 실수축 위에 옮겨진 확률의 배치를 $X$의 <b>확률분포</b>라고 합니다.</p>
+
+    <h3>1.3 이산형과 연속형</h3>
+    <ul>
+      <li><b>이산형 확률변수</b>: 가질 수 있는 값이 0, 1, 2, …처럼 띄엄띄엄 셀 수 있습니다. 예: 앞면 수, 불량품 개수, 하루 방문자 수.</li>
+      <li><b>연속형 확률변수</b>: 어떤 구간 안의 모든 실수 값을 가질 수 있습니다. 예: 통학 시간, 키, 전구 수명.</li>
+    </ul>
+    <p>통학 시간을 “27분”이라고 적어도 실제 시간은 27.318…분처럼 끝없이 이어지는 값입니다. 측정 도구가 반올림했을 뿐, 확률변수 자체는 연속형으로 다룹니다.</p>
+
+    <h3>1.4 확률과 확률분포</h3>
+    <p><b>확률</b>은 한 사건에 대한 0과 1 사이의 수 하나입니다. 예를 들어 $P(X=2)=3/8$입니다. <b>확률분포</b>는 모든 값(또는 모든 구간)에 확률이 어떻게 배치되어 있는지를 알려 주는 규칙 전체입니다. 위 표 전체가 하나의 확률분포입니다. 확률분포를 나타내는 도구가 이 강의노트의 주인공인 확률질량함수(PMF), 확률밀도함수(PDF), 그리고 9장에서 예고할 누적분포함수(CDF)입니다.</p>
+
+    <!-- ───────────── 2장 ───────────── -->
+    <h2 id="ch2">2. 히스토그램 만들기</h2>
+    <p>확률분포는 눈에 보이지 않습니다. 우리가 볼 수 있는 것은 실험을 여러 번 반복해 얻은 <b>표본</b>뿐입니다. 표본의 모양을 보는 가장 기본적인 그림이 히스토그램입니다.</p>
+    <h3>2.1 구간과 도수</h3>
+    <p>학생 20명의 통학 시간(분)을 작은 값부터 늘어놓았습니다.</p>
+    <p style="font-variant-numeric:tabular-nums">12, 15, 17, 18, 21, 22, 22, 24, 25, 26, 27, 28, 29, 31, 33, 34, 36, 38, 42, 47</p>
+    <p>10분 단위로 구간을 나누고 각 구간에 들어간 개수, 곧 <b>도수</b>를 셉니다. 구간은 왼쪽 끝을 포함하고 오른쪽 끝을 포함하지 않는 $[a, b)$로 정합니다. 그래야 경계값 20분이 두 구간에 겹쳐 세어지지 않습니다.</p>
+    <div class="tscroll"><table class="lt">
+      <thead><tr><th>구간</th><th>도수 $c_j$</th><th>상대도수 $c_j/n$</th><th>밀도 $c_j/(n\Delta x)$</th></tr></thead>
+      <tbody>
+        <tr><td>[10, 20)</td><td>4</td><td>0.20</td><td>0.020</td></tr>
+        <tr><td>[20, 30)</td><td>9</td><td>0.45</td><td>0.045</td></tr>
+        <tr><td>[30, 40)</td><td>5</td><td>0.25</td><td>0.025</td></tr>
+        <tr><td>[40, 50)</td><td>2</td><td>0.10</td><td>0.010</td></tr>
+        <tr><td>합계</td><td>20</td><td>1.00</td><td>(면적 합 1)</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>2.2 상대도수</h3>
+    <p>도수는 표본 크기 $n$에 따라 눈금이 달라집니다. 학생 200명을 조사하면 도수는 대략 열 배가 됩니다. 그래서 도수를 $n$으로 나눈 <b>상대도수</b>를 씁니다. 상대도수의 합은 언제나 1이고, 표본 크기가 달라도 같은 눈금에서 비교할 수 있습니다.</p>
+
+    <h3>2.3 구간 폭이 바뀌면</h3>
+    <p>같은 자료를 5분 단위로 나누면 구간이 8개가 되고, 상대도수는 0.05, 0.15, 0.20, 0.25, 0.15, 0.10, 0.05, 0.05가 됩니다. 아래 오른쪽 그림의 점선은 10분 단위일 때의 상대도수입니다. 구간 폭이 반이 되자 막대 높이도 대략 반으로 낮아졌습니다.</p>
+    <figure class="lf">
+      <div class="lf-pair">
+        <div><p>폭 10분, 상대도수</p><div class="lfig" data-fig="commute-rel10"></div></div>
+        <div><p>폭 5분, 상대도수 (점선: 폭 10분)</p><div class="lfig" data-fig="commute-rel5"></div></div>
+      </div>
+      <figcaption><b>그림 2.1</b> 구간 폭을 반으로 줄이면 한 구간에 들어가는 비율도 대략 반이 됩니다. 상대도수 히스토그램의 높이는 구간 폭에 따라 달라집니다.</figcaption>
+    </figure>
+    <p>이 문제는 4장에서 <b>밀도</b>로 해결합니다. 그 전에, 막대 높이를 볼 때 먼저 알아야 할 것이 있습니다. 표본이 우연에 따라 흔들린다는 사실입니다.</p>
+    <div class="try"><b>사이트에서 해 보기</b><p><a href="../module1/continuous.html?step=2">연속형 2단계</a>에서 ‘Δx 반으로’를 누르고 점선과 비교해 보세요.</p></div>
+
+    <!-- ───────────── 3장 ───────────── -->
+    <h2 id="ch3">3. 막대는 왜 고르지 않은가: 표본 변동</h2>
+    <h3>3.1 균등분포에서 100개를 뽑으면</h3>
+    <p>주사위는 여섯 눈이 모두 확률 1/6로 나옵니다. 그런데 100번 던진 결과를 히스토그램으로 그리면 막대 높이가 꽤 다릅니다. 이 사이트의 기본 시드(2026)로 100번 던진 결과는 1부터 6까지 <b>16, 7, 24, 17, 21, 15</b>번이었습니다. 2의 눈은 7번, 3의 눈은 24번입니다. 주사위가 잘못된 걸까요?</p>
+    <figure class="lf">
+      <div class="lfig" data-fig="dice-100"></div>
+      <figcaption><b>그림 3.1</b> 주사위 100번 (시드 2026). 막대에 겹친 세로선은 3.3절의 <b>예상 변동 범위</b>(기댓값 ± 2 표준오차)이고, 가운데 작은 원이 기댓값 16.7입니다. 2의 눈(주황)만 범위를 벗어났습니다.</figcaption>
+    </figure>
+    <p>연속형 균등분포 $U(0,1)$에서 100개를 뽑아 폭 0.1인 구간 10개로 나누어도 마찬가지입니다. 각 구간에 기대되는 개수는 10개이지만, 실제로는 5개인 구간도 17개인 구간도 나옵니다. 아래는 시드만 바꿔 네 번 반복한 결과입니다.</p>
+    <figure class="lf">
+      <div class="lfig" data-fig="unif-seeds"></div>
+      <figcaption><b>그림 3.2</b> $U(0,1)$에서 난수 100개, 구간 10개. 네 번 모두 같은 분포에서 뽑았지만 막대 모양이 매번 다릅니다. 세로선은 각 구간의 예상 변동 범위 4개 ~ 16개입니다.</figcaption>
+    </figure>
+    <p>결론부터 말하면 이 정도 차이는 <b>정상</b>입니다. 왜 그런지, 어디까지가 정상인지를 계산해 봅시다.</p>
+
+    <h3>3.2 구간의 도수는 이항분포를 따른다</h3>
+    <p>난수 하나가 구간 $j$에 들어갈 확률을 $p_j$라고 합시다. 주사위의 한 눈이면 $p_j=1/6$, $U(0,1)$의 폭 0.1 구간이면 $p_j=0.1$입니다. 난수 $n$개를 독립적으로 뽑을 때 구간 $j$에 들어가는 개수 $C_j$는 “성공 확률 $p_j$인 시행을 $n$번 했을 때의 성공 횟수”이므로 이항분포를 따릅니다.</p>
+    <div class="thm"><b>성질 3.1 구간 도수의 분포</b>
+      $$C_j\sim B(n,\,p_j),\qquad E[C_j]=np_j,\qquad SD[C_j]=\sqrt{np_j(1-p_j)}$$
+    </div>
+    <p>기댓값 $np_j$는 “평균적으로 이만큼”일 뿐이고, 실제 도수는 표준편차 $\sqrt{np_j(1-p_j)}$ 정도로 위아래로 흔들립니다. 주사위 100번이면</p>
+    $$E[C_j]=100\times\tfrac16\approx 16.7,\qquad SD[C_j]=\sqrt{100\times\tfrac16\times\tfrac56}\approx 3.73$$
+    <p>입니다. 즉 한 눈의 도수가 16.7에서 3~4개 정도 벗어나는 것은 아주 흔한 일입니다.</p>
+    <p>이 사이트로 시드 1번부터 20,000번까지 주사위 100번 던지기를 반복해 보면, 각 눈의 도수 평균은 16.63~16.69이고 분산은 13.5~14.1입니다. 이론값 16.67과 13.89에 잘 맞습니다. 난수 생성기와 집계가 올바르게 작동하고 있다는 뜻입니다.</p>
+
+    <h3>3.3 기댓값 ± 2 표준오차: 예상 변동 범위</h3>
+    <p>이항분포는 $n$이 크면 정규분포에 가까워지므로, 도수가 기댓값에서 표준편차의 2배 이상 벗어날 확률은 대략 5%입니다. 그래서 다음 범위를 각 막대의 <b>예상 변동 범위</b>로 삼을 수 있습니다.</p>
+    $$np_j-2\sqrt{np_j(1-p_j)}\;\le\;C_j\;\le\;np_j+2\sqrt{np_j(1-p_j)}$$
+    <div class="tscroll"><table class="lt">
+      <thead><tr><th>상황</th><th>기댓값</th><th>표준편차</th><th>예상 변동 범위</th><th>한 막대가 벗어날 확률</th></tr></thead>
+      <tbody>
+        <tr><td>주사위 100번, 한 눈</td><td>16.7</td><td>3.73</td><td>9.2 ~ 24.1</td><td>4.3%</td></tr>
+        <tr><td>$U(0,1)$ 100개, 폭 0.1</td><td>10</td><td>3.00</td><td>4 ~ 16</td><td>2.8%</td></tr>
+      </tbody>
+    </table></div>
+    <p>그림 3.1의 2의 눈(7번)은 범위를 벗어났고, 표준화하면 $(7-16.7)/3.73\approx-2.6$입니다. 드문 편이지만 이상한 일은 아닙니다. 막대가 여러 개이면 <b>그중 하나쯤 범위를 벗어나는 것은 흔합니다</b>. 시뮬레이션으로 확인하면 주사위 100번에서 여섯 눈 중 적어도 하나가 범위를 벗어날 확률은 약 22%, $U(0,1)$ 100개를 구간 10개로 나누었을 때 적어도 한 구간이 벗어날 확률은 약 25%입니다. 그림 3.2에서는 네 번 중 세 번이 범위를 벗어난 막대를 하나 이상 가지고 있습니다. 25%보다 많아 보이지만, 네 번은 너무 적은 반복이라 이 정도 차이도 우연히 흔하게 생깁니다. 표본 변동은 ‘변동의 빈도’를 볼 때도 똑같이 작용합니다.</p>
+    <div class="ex"><b>생각해 보기</b>“막대 하나가 범위를 벗어났으니 주사위가 이상하다”고 결론 내리면 안 되는 이유는 무엇일까요? 막대를 여러 개 동시에 보면 그중 하나가 우연히 벗어날 기회도 그만큼 많아지기 때문입니다. 여러 막대를 한꺼번에 판단하는 방법이 3.5절의 적합도 검정입니다.</div>
+
+    <h3>3.4 n이 커지면 흔들림이 줄어든다</h3>
+    <p>상대도수 $C_j/n$의 표준편차(표준오차)는 $\sqrt{p_j(1-p_j)/n}$입니다. $n$이 100배가 되면 흔들림은 1/10로 줄어듭니다.</p>
+    <div class="tscroll"><table class="lt">
+      <thead><tr><th>표본 크기 $n$</th><th>50</th><th>100</th><th>1,000</th><th>10,000</th><th>1,000,000</th></tr></thead>
+      <tbody>
+        <tr><td>상대도수의 표준오차 ($p=1/6$)</td><td>0.053</td><td>0.037</td><td>0.012</td><td>0.0037</td><td>0.00037</td></tr>
+        <tr><td>상대도수의 표준오차 ($p=0.1$)</td><td>0.042</td><td>0.030</td><td>0.0095</td><td>0.0030</td><td>0.0003</td></tr>
+      </tbody>
+    </table></div>
+    <p>주사위 100번이면 한 눈의 비율이 0.167 ± 0.075 정도로 흔들리고, 10,000번이면 ± 0.0075 정도로 줄어듭니다. 이것이 <b>대수의 법칙</b>이 눈에 보이는 모습입니다.</p>
+    <figure class="lf">
+      <div class="lfig" data-fig="unif-10000"></div>
+      <figcaption><b>그림 3.3</b> $U(0,1)$에서 10,000개를 뽑은 상대도수 히스토그램. 예상 변동 범위가 0.094 ~ 0.106으로 좁아져 막대가 거의 고르게 보입니다.</figcaption>
+    </figure>
+
+    <h3>3.5 (심화) 카이제곱 적합도 검정으로 한꺼번에 판단하기</h3>
+    <p>모든 막대를 한꺼번에 보는 지표로 카이제곱 통계량을 씁니다.</p>
+    $$\chi^2=\sum_{j=1}^{K}\frac{(C_j-np_j)^2}{np_j}$$
+    <p>분포가 맞다면 $\chi^2$는 대략 자유도 $K-1$인 카이제곱분포를 따릅니다. 시드 2026의 주사위 결과는</p>
+    $$\chi^2=\frac{(16-16.7)^2+(7-16.7)^2+(24-16.7)^2+(17-16.7)^2+(21-16.7)^2+(15-16.7)^2}{16.7}\approx 10.16$$
+    <p>이고, 자유도 5에서 5% 기준값 11.07보다 작습니다(p값 약 0.07). 그림 3.2의 시드 2026 균등분포 결과는 $\chi^2=11.0$으로 자유도 9의 기준값 16.92보다 훨씬 작습니다(p값 약 0.28). 둘 다 “주어진 분포에서 뽑은 표본으로 볼 만한 결과”입니다.</p>
+    <div class="try"><b>사이트에서 해 보기</b><p><a href="../module1/discrete.html?step=1&amp;d=dice&amp;p=a:1;b:6&amp;n=100&amp;seed=2026&amp;m=1&amp;y=count&amp;o=b">주사위 100번 + 예상 변동 범위</a>를 열고 ‘새 난수로 다시 뽑기’를 여러 번 눌러 보세요. 범위를 벗어나는 막대가 몇 번에 한 번꼴로 나오나요? n을 10,000으로 바꾸면 어떻게 되나요?</p></div>
+
+    <!-- ───────────── 4장 ───────────── -->
+    <h2 id="ch4">4. 밀도 히스토그램: 면적이 확률이 되도록</h2>
+    <h3>4.1 높이를 폭으로 나누기</h3>
+    <p>2.3절에서 상대도수의 높이가 구간 폭에 따라 달라지는 것을 보았습니다. 해결책은 높이를 구간 폭으로 한 번 더 나누는 것입니다.</p>
+    <div class="def"><b>정의 4.1 밀도 히스토그램</b>구간 $j$의 막대 높이를 다음과 같이 정한 히스토그램입니다.
+      $$h_j=\frac{\text{상대도수}}{\Delta x}=\frac{c_j}{n\,\Delta x}$$
+    </div>
+    <p>그러면 막대 하나의 <b>면적</b>이 정확히 상대도수가 됩니다.</p>
+    $$\text{면적}_j=\Delta x\times h_j=\frac{c_j}{n},\qquad \sum_j\text{면적}_j=\sum_j\frac{c_j}{n}=1$$
+    <p>통학 시간 자료에서 [20, 30) 구간의 밀도는 $0.45/10=0.045$입니다. 이 구간을 [20, 25)와 [25, 30)으로 나누면 상대도수는 0.20과 0.25이고, 밀도는 $0.20/5=0.04$와 $0.25/5=0.05$입니다. 두 밀도의 평균은 $(0.04+0.05)/2=0.045$로 원래 막대의 높이와 정확히 같습니다.</p>
+    <figure class="lf">
+      <div class="lf-pair">
+        <div><p>폭 10분, 밀도</p><div class="lfig" data-fig="commute-den10"></div></div>
+        <div><p>폭 5분, 밀도 (점선: 폭 10분)</p><div class="lfig" data-fig="commute-den5"></div></div>
+      </div>
+      <figcaption><b>그림 4.1</b> 밀도로 그리면 구간을 쪼개도 높이의 수준이 유지됩니다. 쪼개진 두 막대 높이의 평균이 원래 막대 높이와 같기 때문입니다.</figcaption>
+    </figure>
+    <div class="thm"><b>성질 4.1 쪼개기와 평균</b>폭 $\Delta x$인 구간을 폭 $\Delta x/2$인 두 구간으로 나누면, 두 구간의 밀도 $h', h''$와 원래 밀도 $h$ 사이에 다음이 성립합니다.
+      $$h=\frac{c'+c''}{n\,\Delta x}=\frac12\left(\frac{c'}{n\,\Delta x/2}+\frac{c''}{n\,\Delta x/2}\right)=\frac{h'+h''}{2}$$
+    </div>
+
+    <h3>4.2 세로축의 단위</h3>
+    <p>밀도의 단위는 “가로축 한 단위당 확률”입니다. 통학 시간 예에서 0.045는 “20분대에서는 1분당 약 4.5%”라는 뜻입니다. 물리에서 질량을 부피로 나눈 것이 밀도이듯, 확률을 길이로 나눈 것이 확률밀도입니다. 그래서 밀도 값 하나만으로는 확률이 되지 않고, 반드시 폭을 곱해야 확률이 됩니다.</p>
+    <div class="try"><b>사이트에서 해 보기</b><p><a href="../module1/continuous.html?step=3">연속형 3단계</a>에서 막대 위에 마우스를 올리면 개수 → 상대도수 → 밀도로 가는 계산이 보입니다. 차트 아래 ‘면적 합계’가 세로축 모드마다 어떻게 달라지는지도 확인하세요.</p></div>
+
+    <!-- ───────────── 5장 ───────────── -->
+    <h2 id="ch5">5. 두 극한과 확률밀도함수</h2>
+    <h3>5.1 n을 키우면: 상대도수 → 구간 확률</h3>
+    <p>3장에서 보았듯이 $n$이 커지면 구간의 상대도수는 그 구간의 실제 확률로 다가갑니다.</p>
+    $$\frac{C_j}{n}\xrightarrow[n\to\infty]{}P(a_j\le X\lt b_j)$$
+    <h3>5.2 Δx를 줄이면: 평균 밀도 → 한 점의 밀도</h3>
+    <p>$n$이 충분히 커서 상대도수가 구간 확률과 같다고 하면, 밀도 막대의 높이는 “구간 확률 ÷ 구간 폭”, 곧 그 구간의 <b>평균 밀도</b>입니다. 구간을 점점 좁히면 평균 밀도는 한 점에서의 밀도로 다가가고, 그 값을 이은 곡선이 확률밀도함수 $f(x)$입니다.</p>
+    $$f(x)=\lim_{\Delta x\to 0}\frac{P(x\le X\lt x+\Delta x)}{\Delta x}$$
+    <p>동시에 막대 면적의 합은 리만 합이므로 적분으로 바뀝니다.</p>
+    $$\sum_j f(x_j^*)\,\Delta x\;\longrightarrow\;\int_{-\infty}^{\infty}f(x)\,dx=1$$
+
+    <h3>5.3 두 극한은 함께 움직여야 한다</h3>
+    <p>$n$을 고정하고 $\Delta x$만 줄이면 어떻게 될까요? 한 구간에 들어가는 표본 수는 대략 $n\,p_j\approx n\,f(x)\,\Delta x$이므로, $\Delta x$가 작아지면 구간마다 표본이 몇 개 없어지고 3장의 변동이 커집니다. 밀도 막대의 상대적 흔들림은</p>
+    $$\frac{SD[h_j]}{E[h_j]}\approx\frac{\sqrt{np_j}}{np_j}=\frac{1}{\sqrt{n\,f(x)\,\Delta x}}$$
+    <p>로, $n\Delta x$가 작을수록 커집니다. 반대로 $\Delta x$가 크면 막대가 구간 전체를 평균 내어 곡선의 굴곡을 뭉갭니다. 이것을 <b>치우침(편향)</b>이라고 합니다.</p>
+    <figure class="lf">
+      <div class="lf-pair">
+        <div><p>n = 100, 구간 160개 (들쭉날쭉)</p><div class="lfig" data-fig="normal-noisy"></div></div>
+        <div><p>n = 1,000,000, 구간 5개 (뭉툭함)</p><div class="lfig" data-fig="normal-coarse"></div></div>
+      </div>
+      <div style="margin-top:10px"><p style="margin:0 0 2px;font-size:0.84rem;color:var(--ink-2)">n = 1,000,000, Scott 규칙 (구간 약 200개)</p><div class="lfig" data-fig="normal-good"></div></div>
+      <figcaption><b>그림 5.1</b> 표준정규분포. 초록 곡선은 이론 확률밀도함수입니다. 표본이 적은데 구간만 잘게 나누면 변동이, 표본이 많아도 구간이 넓으면 치우침이 남습니다. 둘을 함께 움직여야 곡선에 다가갑니다.</figcaption>
+    </figure>
+    <p>그래서 히스토그램이 $f(x)$로 수렴하려면 다음 세 조건이 함께 필요합니다.</p>
+    $$n\to\infty,\qquad \Delta x\to 0,\qquad n\,\Delta x\to\infty$$
+
+    <h3>5.4 구간 폭을 정하는 규칙</h3>
+    <p>변동과 치우침의 균형을 맞추는 구간 폭은 대략 $n^{-1/3}$에 비례해 줄어든다는 것이 알려져 있습니다(Scott, 1979). 자주 쓰는 규칙 세 가지를 표준정규분포에서 $n=1{,}000$일 때의 값과 함께 정리합니다.</p>
+    <div class="tscroll"><table class="lt wide">
+      <thead><tr><th>규칙</th><th>공식</th><th>$N(0,1)$, $n=1000$일 때</th></tr></thead>
+      <tbody>
+        <tr><td>Sturges (1926)</td><td>구간 수 $k=\lceil\log_2 n\rceil+1$</td><td>$k=11$</td></tr>
+        <tr><td>Scott (1979)</td><td>$\Delta x=3.49\,s\,n^{-1/3}$ ($s$: 표본표준편차)</td><td>$\Delta x\approx 0.35$</td></tr>
+        <tr><td>Freedman–Diaconis (1981)</td><td>$\Delta x=2\,\mathrm{IQR}\,n^{-1/3}$</td><td>$\Delta x\approx 0.27$</td></tr>
+      </tbody>
+    </table></div>
+    <p>Sturges 규칙은 $n$이 커져도 구간 수가 아주 천천히 늘어 큰 표본에서는 너무 뭉툭해집니다. Freedman–Diaconis 규칙은 표준편차 대신 사분위범위를 써서 이상값에 덜 민감합니다.</p>
+
+    <h3>5.5 확률밀도함수의 정의</h3>
+    <div class="def"><b>정의 5.1 확률밀도함수</b>연속형 확률변수 $X$에 대해 모든 $a\le b$에서
+      $$P(a\le X\le b)=\int_a^b f(x)\,dx$$
+      를 만족하는 함수 $f$를 $X$의 <b>확률밀도함수</b>(probability density function, PDF)라고 합니다. $f$는 다음 두 성질을 가집니다.
+      $$f(x)\ge 0,\qquad \int_{-\infty}^{\infty}f(x)\,dx=1$$
+    </div>
+    <div class="try"><b>사이트에서 해 보기</b><p><a href="../module1/continuous.html?step=4">연속형 4단계</a>에서 먼저 ‘n = 100에서 Δx만 아주 작게’를 누른 뒤 ‘극한으로 가기’를 재생하세요. 아래 (n, Δx) 지도의 점을 들쭉날쭉 영역과 뭉툭한 영역으로 끌어 보면 5.3절의 두 실패를 직접 만들 수 있습니다.</p></div>
+
+    <!-- ───────────── 6장 ───────────── -->
+    <h2 id="ch6">6. 확률밀도함수로 확률 계산하기</h2>
+    <h3>6.1 확률은 곡선 아래 넓이</h3>
+    <div class="ex"><b>예제 6.1 지수분포</b>전화 상담 대기 시간 $X$(분)가 $f(x)=e^{-x}$ ($x\ge0$)인 지수분포를 따른다고 합시다. 1분 안에 연결될 확률은
+      $$P(0\le X\le 1)=\int_0^1 e^{-x}\,dx=1-e^{-1}\approx 0.632$$
+      이고, 2분보다 오래 기다릴 확률은 $P(X\gt 2)=\int_2^\infty e^{-x}dx=e^{-2}\approx 0.135$입니다.</div>
+    <div class="ex"><b>예제 6.2 표준정규분포</b>$Z\sim N(0,1)$이면 $P(-1\le Z\le 1)\approx 0.683$, $P(-1.96\le Z\le 1.96)\approx 0.950$입니다. 정규분포의 넓이는 손으로 적분할 수 없어 표나 계산기를 씁니다.</div>
+
+    <h3>6.2 한 점의 확률은 0</h3>
+    <p>폭이 0인 구간의 넓이는 0이므로, 연속형 확률변수가 미리 정한 한 값과 정확히 같을 확률은 0입니다.</p>
+    $$P(X=a)=\int_a^a f(x)\,dx=0$$
+    <p>따라서 연속형에서는 끝점을 넣든 빼든 확률이 같습니다.</p>
+    $$P(a\le X\le b)=P(a\lt X\le b)=P(a\le X\lt b)=P(a\lt X\lt b)$$
+    <p>“그래도 표본에는 27.318분 같은 값이 실제로 나오지 않느냐”고 물을 수 있습니다. 확률이 0이라는 것은 <b>미리 정해 둔</b> 한 값이 정확히 나올 가능성이 0이라는 뜻이지, 어떤 값도 나오지 않는다는 뜻이 아닙니다. 무한히 많은 값 중 무엇인가는 나오지만, 특정한 하나가 나올 확률은 0입니다.</p>
+
+    <h3>6.3 밀도는 1보다 클 수 있다</h3>
+    <p>균등분포 $U(0,\,0.5)$의 밀도는 구간 전체에서 $f(x)=2$입니다. 확률이 2라는 뜻이 아니라, 길이 0.5인 구간에 확률 1이 몰려 있어서 단위 길이당 확률이 2라는 뜻입니다. 전체 넓이는 $0.5\times2=1$이고, 예를 들어 $P(0.1\le X\le0.3)=0.2\times2=0.4$입니다. 표준편차가 0.2인 정규분포 $N(0,\,0.2^2)$도 꼭대기 높이가 약 1.99입니다.</p>
+
+    <h3>6.4 짧은 구간의 확률 ≈ 밀도 × 폭</h3>
+    <p>구간 폭 $h$가 작으면 그 사이의 곡선을 평평하다고 보고 다음처럼 근사할 수 있습니다.</p>
+    $$P(x\le X\le x+h)\approx f(x)\,h$$
+    <p>표준정규분포에서 $f(0)\approx0.3989$이므로 $P(0\le Z\le0.1)\approx0.0399$이고, 정확한 값은 $0.0398$입니다. 이 근사가 바로 밀도 히스토그램의 막대 면적이 하는 일입니다.</p>
+    <div class="try"><b>사이트에서 해 보기</b><p><a href="../module1/continuous.html?step=5">연속형 5단계</a>에서 구간 손잡이를 끌어 세 가지 확률을 비교하고, ‘한 점으로 좁히기’와 ‘f(x) &gt; 1 예’ 버튼을 눌러 보세요.</p></div>
+
+    <!-- ───────────── 7장 ───────────── -->
+    <h2 id="ch7">7. 이산형과 확률질량함수</h2>
+    <h3>7.1 상대도수는 확률로 간다</h3>
+    <p>이산형에서는 정수마다 막대 하나를 세우는 것이 자연스럽습니다(구간 폭 1, 막대 가운데가 정수). $n$이 커지면 값 $x$의 상대도수는 확률 $P(X=x)$로 다가갑니다. 이 확률을 값마다 모은 것이 확률질량함수입니다.</p>
+    <figure class="lf">
+      <div class="lfig" data-fig="binom-rel"></div>
+      <figcaption><b>그림 7.1</b> 이항분포 $B(10,\,0.3)$에서 10,000개를 뽑은 상대도수 히스토그램과 이론 확률질량함수(초록 점과 수직선).</figcaption>
+    </figure>
+    <h3>7.2 구간을 쪼개면 밀도가 발산한다</h3>
+    <p>연속형처럼 밀도로 바꾸어 구간 폭을 줄이면 어떻게 될까요? 정수를 가운데에 둔 폭 $\Delta x$인 구간에는 여전히 그 정수 하나만 들어 있으므로 상대도수는 거의 변하지 않습니다. 그런데 폭은 0으로 가므로 밀도는 한없이 커집니다.</p>
+    $$\frac{c_x/n}{\Delta x}\approx\frac{p(x)}{\Delta x}\;\xrightarrow[\Delta x\to0]{}\;\infty$$
+    <figure class="lf">
+      <div class="lfig" data-fig="binom-den20"></div>
+      <figcaption><b>그림 7.2</b> 같은 표본을 Δx = 1/20의 밀도 히스토그램으로 그렸습니다. $x=3$의 막대 높이는 약 $0.2668\times20\approx5.3$입니다. 면적 합은 여전히 1이지만, 확률이 점에 몰려 있어 높이가 계속 커집니다. 정수 사이 구간은 비어 있습니다.</figcaption>
+    </figure>
+    <p>그래서 이산형은 밀도 대신 <b>높이 자체가 확률</b>인 함수로 나타냅니다.</p>
+    <div class="def"><b>정의 7.1 확률질량함수</b>이산형 확률변수 $X$에 대해 $p(x)=P(X=x)$를 $X$의 <b>확률질량함수</b>(probability mass function, PMF)라고 합니다. $p$는 다음 성질을 가집니다.
+      $$0\le p(x)\le 1,\qquad \sum_x p(x)=1,\qquad P(X\in A)=\sum_{x\in A}p(x)$$
+    </div>
+
+    <h3>7.3 계산 예와 끝점</h3>
+    <div class="ex"><b>예제 7.1 이항분포</b>$X\sim B(10,\,0.3)$이면 $p(x)=\binom{10}{x}0.3^x\,0.7^{10-x}$입니다.
+      <div class="tscroll"><table class="lt">
+        <thead><tr><th>$x$</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8 이상</th></tr></thead>
+        <tbody><tr><td>$p(x)$</td><td>0.0282</td><td>0.1211</td><td>0.2335</td><td>0.2668</td><td>0.2001</td><td>0.1029</td><td>0.0368</td><td>0.0090</td><td>0.0016</td></tr></tbody>
+      </table></div>
+      $$P(X\le3)=0.0282+0.1211+0.2335+0.2668=0.6496$$
+      $$P(X\lt 3)=P(X\le 2)=0.3828$$
+      두 값의 차이 $0.2668$이 정확히 $P(X=3)$입니다. 이산형에서는 끝점 포함 여부가 확률을 바꿉니다. 또한 $P(2\le X\le4)=0.2335+0.2668+0.2001=0.7004$입니다.</div>
+    <p>이산형에서 확률질량함수의 점들을 선으로 이어 그리기도 하지만, 그 선 위의 값(예: $x=2.5$)은 확률이 아닙니다. 사이트에서 ‘꼭대기 잇기’를 <b>보조선</b>이라 부르는 이유입니다.</p>
+    <div class="try"><b>사이트에서 해 보기</b><p><a href="../module1/discrete.html?step=3">이산형 3단계</a>에서 ‘Δx 반으로’를 여러 번 누르고, <a href="../module1/discrete.html?step=4">4단계</a>에서 끝점 포함 여부를 바꿔 보세요.</p></div>
+
+    <!-- ───────────── 8장 ───────────── -->
+    <h2 id="ch8">8. 한눈에 비교: 이산형과 연속형</h2>
+    <div class="tscroll"><table class="lt wide">
+      <thead><tr><th></th><th>이산형</th><th>연속형</th></tr></thead>
+      <tbody>
+        <tr><td>가질 수 있는 값</td><td>띄엄띄엄 셀 수 있는 값</td><td>구간 안의 모든 실수</td></tr>
+        <tr><td>분포를 나타내는 함수</td><td>확률질량함수 $p(x)=P(X=x)$</td><td>확률밀도함수 $f(x)$</td></tr>
+        <tr><td>함수 값의 의미</td><td>그 값이 나올 확률</td><td>단위 길이당 확률 (확률 아님)</td></tr>
+        <tr><td>함수 값의 범위</td><td>$0\le p(x)\le1$</td><td>$f(x)\ge0$ (1보다 클 수 있음)</td></tr>
+        <tr><td>전체 합</td><td>$\sum_x p(x)=1$</td><td>$\int f(x)\,dx=1$</td></tr>
+        <tr><td>구간 확률</td><td>막대 높이의 합</td><td>곡선 아래 넓이</td></tr>
+        <tr><td>한 점의 확률</td><td>$p(a)$, 0보다 클 수 있음</td><td>항상 0</td></tr>
+        <tr><td>끝점 포함 여부</td><td>확률이 달라짐</td><td>확률이 같음</td></tr>
+        <tr><td>히스토그램의 극한</td><td>상대도수 히스토그램 → PMF ($n\to\infty$)</td><td>밀도 히스토그램 → PDF ($n\to\infty$, $\Delta x\to0$, $n\Delta x\to\infty$)</td></tr>
+        <tr><td>밀도로 그리고 Δx → 0</td><td>정수 위 막대가 발산</td><td>높이가 $f(x)$로 수렴</td></tr>
+      </tbody>
+    </table></div>
+
+    <!-- ───────────── 9장 ───────────── -->
+    <h2 id="ch9">9. 다음 이야기: 누적분포함수</h2>
+    <p>지금까지 확률을 계산할 때 이산형은 합, 연속형은 적분을 썼습니다. 두 경우를 하나로 묶는 도구가 <b>누적분포함수</b>(cumulative distribution function, CDF)입니다.</p>
+    <div class="def"><b>정의 9.1 누적분포함수</b>$F(x)=P(X\le x)$</div>
+    <ul>
+      <li>이산형: $F(x)=\sum_{t\le x}p(t)$. 그래프는 계단 모양이고, 계단의 높이가 곧 $p(x)$입니다.</li>
+      <li>연속형: $F(x)=\int_{-\infty}^{x}f(t)\,dt$. 그래프는 매끄럽게 올라가고, 기울기가 곧 $f(x)$입니다. 즉 $f(x)=F'(x)$입니다.</li>
+      <li>어느 쪽이든 $P(a\lt X\le b)=F(b)-F(a)$입니다.</li>
+    </ul>
+    <p>예를 들어 $X\sim B(10,0.3)$이면 $P(2\le X\le4)=F(4)-F(1)$입니다. 표본으로 그린 계단 모양의 경험적 누적분포함수가 이론 CDF로 다가가는 모습은 모듈 2에서 다룹니다.</p>
+
+    <!-- ───────────── 정리 ───────────── -->
+    <h2 id="summary">10. 정리와 자주 하는 오해</h2>
+    <ol>
+      <li>확률변수는 실험 결과에 수를 붙이는 함수이고, 그 수들 위에 확률이 배치된 모습이 확률분포입니다.</li>
+      <li>히스토그램의 세로축은 도수, 상대도수, 밀도 세 가지이고, 밀도로 그려야 면적이 확률이 됩니다.</li>
+      <li>각 막대의 도수는 이항분포 $B(n, p_j)$를 따르므로 표본이 작으면 막대가 고르지 않은 것이 정상입니다. 흔들림의 크기는 $\sqrt{np_j(1-p_j)}$이고 $n$이 커질수록 상대적으로 줄어듭니다.</li>
+      <li>밀도 히스토그램은 $n\to\infty$, $\Delta x\to0$, $n\Delta x\to\infty$일 때 확률밀도함수로 다가갑니다.</li>
+      <li>연속형 확률은 곡선 아래 넓이이고, 한 점의 확률은 0이며, 밀도는 1보다 클 수 있습니다.</li>
+      <li>이산형은 밀도가 발산하므로 높이 자체가 확률인 확률질량함수를 쓰고, 끝점 포함 여부가 중요합니다.</li>
+    </ol>
+    <div class="tscroll"><table class="lt wide">
+      <thead><tr><th>오해</th><th>바로잡기</th></tr></thead>
+      <tbody>
+        <tr><td>균등분포인데 막대가 고르지 않으니 난수가 잘못됐다</td><td>각 막대는 이항분포만큼 흔들립니다. 예상 변동 범위나 카이제곱 적합도로 판단합니다 (3장).</td></tr>
+        <tr><td>$f(x)$의 값이 확률이다</td><td>$f(x)$는 밀도이고, 폭을 곱해야 확률이 됩니다 (4.2, 6.4절).</td></tr>
+        <tr><td>밀도는 1을 넘을 수 없다</td><td>$U(0,0.5)$의 밀도는 2입니다. 넘을 수 없는 것은 넓이(확률)입니다 (6.3절).</td></tr>
+        <tr><td>연속형에서도 $P(X=a)\gt0$이다</td><td>폭 0인 구간의 넓이는 0입니다 (6.2절).</td></tr>
+        <tr><td>구간을 잘게 나눌수록 히스토그램이 정확해진다</td><td>표본이 충분하지 않으면 오히려 들쭉날쭉해집니다. $n\Delta x$도 커야 합니다 (5.3절).</td></tr>
+        <tr><td>이산형 PMF의 점을 이은 선 위의 값도 확률이다</td><td>정수가 아닌 값의 확률은 0입니다. 이은 선은 보조선입니다 (7.3절).</td></tr>
+      </tbody>
+    </table></div>
+
+    <!-- ───────────── 연습문제 ───────────── -->
+    <h2 id="exercises">11. 연습문제</h2>
+    <div class="exercises">
+    <ol>
+      <li>동전을 세 번 던질 때 $Y$ = (앞면 수) − (뒷면 수)라 하자. $Y$가 가질 수 있는 값과 각 확률을 구하시오.
+        <details><summary>풀이</summary><p>앞면 수를 $X$라 하면 $Y=X-(3-X)=2X-3$입니다. $X=0,1,2,3$에 따라 $Y=-3,-1,1,3$이고 확률은 각각 $1/8,\ 3/8,\ 3/8,\ 1/8$입니다.</p></details></li>
+      <li>2.1절의 통학 시간 자료를 [10, 25), [25, 50)의 두 구간(폭이 서로 다름)으로 나누었다. 각 구간의 상대도수와 밀도를 구하고, 폭이 다를 때 상대도수 히스토그램이 왜 오해를 부르는지 설명하시오.
+        <details><summary>풀이</summary><p>[10, 25)에는 12, 15, 17, 18, 21, 22, 22, 24의 8개, [25, 50)에는 12개가 들어 있습니다. 상대도수는 0.40과 0.60, 밀도는 $0.40/15\approx0.027$, $0.60/25=0.024$입니다. 상대도수로 그리면 오른쪽 막대가 더 높아 오른쪽에 자료가 몰린 것처럼 보이지만, 폭이 넓어서 많이 담긴 것일 뿐입니다. 단위 길이당으로 보면 왼쪽이 약간 더 촘촘합니다. 폭이 다르면 반드시 밀도로 그려야 합니다.</p></details></li>
+      <li>주사위를 600번 던진다. 6의 눈이 나온 횟수의 기댓값, 표준편차, 예상 변동 범위(기댓값 ± 2 표준편차)를 구하시오.
+        <details><summary>풀이</summary><p>$C\sim B(600, 1/6)$이므로 $E[C]=100$, $SD[C]=\sqrt{600\times\frac16\times\frac56}=\sqrt{83.3}\approx9.13$입니다. 예상 변동 범위는 약 81.7 ~ 118.3, 곧 82번에서 118번 사이입니다.</p></details></li>
+      <li>$U(0,1)$에서 100개를 뽑아 폭 0.1인 구간 10개로 히스토그램을 그렸더니 한 구간의 도수가 17이었다. 이것만으로 난수 생성기가 잘못되었다고 할 수 있는가?
+        <details><summary>풀이</summary><p>한 구간의 도수는 $B(100, 0.1)$을 따르고 예상 변동 범위는 4 ~ 16입니다. 17은 범위를 조금 벗어났지만, 구간이 10개면 적어도 하나가 범위를 벗어날 확률이 약 25%입니다. 한 구간만 보고 판단할 수 없고, 열 구간 전체로 카이제곱 적합도를 보아야 합니다. 그림 3.2의 시드 2026 결과가 바로 이 경우이며 $\chi^2=11.0$, p값 약 0.28로 이상하지 않습니다.</p></details></li>
+      <li>상대도수의 표준오차를 0.01 이하로 만들려면 $p=0.5$일 때 표본이 몇 개 필요한가?
+        <details><summary>풀이</summary><p>$\sqrt{0.5\times0.5/n}\le0.01$에서 $n\ge0.25/0.0001=2{,}500$입니다.</p></details></li>
+      <li>밀도 히스토그램에서 구간 [2, 2.5)의 높이가 0.36이다. 이 구간의 상대도수는 얼마인가? $n=500$이면 도수는?
+        <details><summary>풀이</summary><p>상대도수 = 높이 × 폭 = $0.36\times0.5=0.18$, 도수 = $0.18\times500=90$입니다.</p></details></li>
+      <li>$f(x)=cx$ ($0\le x\le2$), 그 밖에서는 0인 함수가 확률밀도함수가 되도록 $c$를 정하고, $P(X\le1)$을 구하시오.
+        <details><summary>풀이</summary><p>$\int_0^2 cx\,dx=2c=1$이므로 $c=1/2$입니다. $P(X\le1)=\int_0^1\frac{x}{2}dx=\frac14$입니다. $f(2)=1$이고, $c$가 더 큰 함수였다면 1을 넘을 수도 있습니다.</p></details></li>
+      <li>$X$의 밀도가 $f(x)=2e^{-2x}$ ($x\ge0$)일 때 $P(X=0.5)$, $P(0.5\le X\le1)$, $P(0.5\lt X\lt 1)$을 구하시오.
+        <details><summary>풀이</summary><p>$P(X=0.5)=0$입니다. $P(0.5\le X\le1)=e^{-1}-e^{-2}\approx0.368-0.135=0.233$이고, 연속형이므로 $P(0.5\lt X\lt 1)$도 같은 0.233입니다.</p></details></li>
+      <li>$X\sim B(10,0.3)$일 때 $P(X\ge2)$와 $P(X\gt 2)$를 구하시오. (7.3절의 표를 이용)
+        <details><summary>풀이</summary><p>$P(X\ge2)=1-P(X\le1)=1-(0.0282+0.1211)=0.8507$, $P(X\gt 2)=1-P(X\le2)=1-0.3828=0.6172$입니다. 차이 0.2335는 $P(X=2)$입니다.</p></details></li>
+      <li>표본 100개로 구간을 200개 만든 밀도 히스토그램이 이론 곡선과 전혀 닮지 않았다. 원인을 설명하고 고치는 방법 두 가지를 쓰시오.
+        <details><summary>풀이</summary><p>구간당 평균 표본이 0.5개뿐이라 막대가 0 아니면 매우 높은 값이 되어, 변동이 치우침보다 훨씬 커졌습니다($n\Delta x$가 작음). 표본을 늘리거나, 구간을 넓히면 됩니다. 표본 크기에 맞춰 Scott이나 Freedman–Diaconis 규칙으로 폭을 정하는 것이 좋습니다.</p></details></li>
+      <li>이산형 확률변수의 히스토그램을 밀도로 그리고 Δx를 줄였더니 막대가 끝없이 높아졌다. 연속형에서는 왜 이런 일이 일어나지 않는가?
+        <details><summary>풀이</summary><p>연속형에서는 구간이 좁아지면 그 안에 들어가는 확률도 폭에 비례해 함께 줄어 $P/\Delta x$가 $f(x)$라는 유한한 값으로 갑니다. 이산형에서는 정수 하나를 담은 구간의 확률이 폭과 관계없이 $p(x)$로 남아 있어 $p(x)/\Delta x$가 발산합니다. 확률이 점에 ‘질량’으로 몰려 있는지, 길이에 ‘밀도’로 퍼져 있는지의 차이입니다.</p></details></li>
+    </ol>
+    </div>
+
+    <h2 id="refs">더 읽을거리</h2>
+    <ul class="refs">
+      <li>Freedman, D., &amp; Diaconis, P. (1981). On the histogram as a density estimator: L₂ theory. <i>Zeitschrift für Wahrscheinlichkeitstheorie und verwandte Gebiete</i>, 57, 453–476.</li>
+      <li>Scott, D. W. (1979). On optimal and data-based histograms. <i>Biometrika</i>, 66(3), 605–610.</li>
+      <li>Sturges, H. A. (1926). The choice of a class interval. <i>Journal of the American Statistical Association</i>, 21(153), 65–66.</li>
+      <li>Pearson, K. (1900). On the criterion that a given system of deviations from the probable in the case of a correlated system of variables is such that it can be reasonably supposed to have arisen from random sampling. <i>Philosophical Magazine</i>, Series 5, 50(302), 157–175. (카이제곱 적합도 검정)</li>
+      <li>이 사이트의 <a href="index.html">학습 노트 요약</a>에 개념 요약과 역사 이야기가 있습니다.</li>
+    </ul>
+  </article>
+</div>
+
+<footer class="site-footer"><p>확률변수 실험실 강의노트. 본문의 그림은 페이지를 열 때 이 사이트의 시드 고정 난수 생성기로 다시 그려집니다.</p></footer>
+
+<script src="../vendor/d3.min.js"></script>
+<script src="../vendor/katex/katex.min.js"></script>
+<script src="../vendor/katex/auto-render.min.js"></script>
+<script src="../js/rng.js"></script>
+<script src="../js/distributions.js"></script>
+<script src="../js/histogram.js"></script>
+<script src="../js/chart.js"></script>
+<script src="../js/lecture.js"></script>
+<script>
+  renderMathInElement(document.querySelector('.lecture'), { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }], throwOnError: false });
+</script>
+<script src="../js/core/shell.js"></script>
+</body>
+</html>

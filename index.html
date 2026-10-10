@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>확률변수 실험실</title>
+<meta name="description" content="난수를 뽑아 히스토그램을 그리고, n을 늘리고 구간을 쪼개며 확률질량함수와 확률밀도함수가 어디서 오는지 직접 확인하는 교육용 시뮬레이션 사이트.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .hero { display: grid; gap: 28px; align-items: center; grid-template-columns: minmax(0, 1fr); padding: 12px 0 8px; }
+  @media (min-width: 900px) { .hero { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); } }
+  .hero h1 { font-size: clamp(2rem, 1.3rem + 2.6vw, 3.2rem); letter-spacing: -0.015em; line-height: 1.18; }
+  .hero .lead { font-size: 1.08rem; color: var(--ink-2); max-width: 36em; margin: 16px 0 22px; }
+  .hero .cta { display: flex; flex-wrap: wrap; gap: 10px; }
+  .hero .cta a { padding: 10px 18px; border-radius: 10px; text-decoration: none; font-weight: 600; border: 1px solid var(--line-strong); color: var(--ink); background: var(--surface); }
+  .hero .cta a.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .hero-chart { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px 10px; }
+  .hero-status { display: flex; justify-content: space-between; gap: 12px; font-size: 0.86rem; color: var(--ink-2); font-variant-numeric: tabular-nums; margin: 0 4px 2px; }
+  .hero-status b { color: var(--ink); }
+  .modules { margin-top: 48px; display: grid; gap: 18px; }
+  .module { display: grid; gap: 14px 28px; grid-template-columns: minmax(0, 1fr); padding: 22px 0; border-top: 1px solid var(--line-strong); }
+  @media (min-width: 820px) { .module { grid-template-columns: 220px minmax(0, 1fr); } }
+  .module .mnum { font-family: var(--font-head); font-size: 1.05rem; color: var(--ink-3); }
+  .module h2 { font-size: 1.45rem; margin-bottom: 6px; }
+  .module p { margin: 0 0 12px; color: var(--ink-2); max-width: 62ch; }
+  .tracks { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .track { display: block; padding: 14px 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); text-decoration: none; color: var(--ink); }
+  .track:hover { border-color: var(--accent); }
+  .track b { display: block; font-size: 1.02rem; }
+  .track span { font-size: 0.88rem; color: var(--ink-2); }
+  .module.soon { opacity: 0.75; }
+  .soon-tag { font-size: 0.8rem; color: var(--ink-3); border: 1px solid var(--line-strong); border-radius: 999px; padding: 1px 8px; margin-left: 8px; vertical-align: middle; font-family: var(--font-body); }
+</style>
+</head>
+<body>
+<header data-shell-header data-current="home" data-root=""></header>
+<main class="page">
+  <section class="hero">
+    <div>
+      <h1>확률밀도함수는<br>히스토그램의 끝에 있습니다</h1>
+      <p class="lead">난수를 직접 뽑아 히스토그램을 그리고, 세로축을 밀도로 바꾸고, 표본을 늘리면서 구간을 쪼개 보세요. 들쭉날쭉하던 막대가 하나의 매끄러운 곡선으로 모여드는 순간, 그 곡선이 확률밀도함수입니다.</p>
+      <div class="cta">
+        <a class="primary" href="module1/continuous.html">연속형부터 시작하기</a>
+        <a href="module1/discrete.html">이산형부터 시작하기</a>
+      </div>
+    </div>
+    <figure class="hero-chart" aria-label="표본이 늘고 구간이 좁아지며 히스토그램이 곡선으로 모이는 애니메이션">
+      <div class="hero-status"><span id="hero-dist"></span><span>n = <b id="hero-n">100</b>, 구간 <b id="hero-k">10</b>개</span></div>
+      <div id="hero"></div>
+    </figure>
+  </section>
+
+  <section class="modules">
+    <article class="module">
+      <div><p class="mnum">모듈 1</p></div>
+      <div>
+        <h2>히스토그램에서 분포로</h2>
+        <p>도수, 상대도수, 밀도라는 세 가지 세로축의 차이에서 출발해, 연속형은 확률밀도함수로, 이산형은 확률질량함수로 이어지는 길을 단계별로 걷습니다.</p>
+        <div class="tracks">
+          <a class="track" href="module1/continuous.html"><b>연속형 확률변수 (5단계)</b><span>밀도 히스토그램, 두 극한, 곡선 아래 면적으로 확률 계산</span></a>
+          <a class="track" href="module1/discrete.html"><b>이산형 확률변수 (4단계)</b><span>상대도수의 수렴, 구간을 쪼개면 밀도가 발산하는 이유</span></a>
+          <a class="track" href="module1/lab.html"><b>자유 실험실</b><span>15가지 분포와 모든 조작을 마음대로 조합</span></a>
+          <a class="track" href="notes/lecture.html"><b>강의노트</b><span>표본 변동부터 PDF·PMF까지 개념 설명, 예제, 연습문제</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="module">
+      <div><p class="mnum">모듈 2</p></div>
+      <div>
+        <h2>누적분포함수</h2>
+        <p>표본을 줄 세워 세는 경험적 누적분포함수에서 출발해, PDF 아래 넓이가 CDF 높이가 되는 관계, 이산형 CDF의 점프가 곧 PMF라는 사실, 분위수와 역변환 표본추출까지 다룹니다.</p>
+        <div class="tracks">
+          <a class="track" href="module2/continuous.html"><b>연속형 (6단계)</b><span>ECDF의 수렴, 넓이와 기울기, 분위수, 균등난수로 원하는 분포 만들기</span></a>
+          <a class="track" href="module2/discrete.html"><b>이산형 (4단계)</b><span>계단과 점프, 열린 점과 닫힌 점, 끝점이 바꾸는 확률</span></a>
+          <a class="track" href="module2/lab.html"><b>자유 실험실</b><span>혼합분포, DKW 신뢰띠, 수렴 그래프</span></a>
+          <a class="track" href="notes/lecture2.html"><b>강의노트 2</b><span>누적분포함수의 정의와 성질, 예제, 연습문제</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="module">
+      <div><p class="mnum">모듈 3</p></div>
+      <div>
+        <h2>확률변수란 무엇인가</h2>
+        <p>표본공간의 결과 하나하나가 실수로 옮겨지는 대응을 그림으로 보고, 규칙을 바꾸면 분포가 어떻게 달라지는지, 역상의 넓이가 왜 누적분포함수인지 살펴봅니다. 확률을 처음 배운다면 여기서 시작해도 좋습니다.</p>
+        <div class="tracks">
+          <a class="track" href="module3/discrete.html"><b>주사위와 동전 (5단계)</b><span>표본공간, 결과에 수 붙이기, 역상, 반복 실험</span></a>
+          <a class="track" href="module3/continuous.html"><b>정사각형 위의 점 (4단계)</b><span>넓이 = 확률, 영역 넓이 = 누적확률, 확률변수의 함수</span></a>
+          <a class="track" href="module3/lab.html"><b>자유 실험실</b><span>식을 직접 써서 확률변수 정의, 찌그러진 주사위</span></a>
+          <a class="track" href="notes/lecture3.html"><b>강의노트 3</b><span>확률변수의 정의, 역상, 유도 분포, 변수 변환</span></a>
+        </div>
+      </div>
+    </article>
+    <article class="module">
+      <div><p class="mnum">모듈 4</p></div>
+      <div>
+        <h2>측도론과 확률분포</h2>
+        <p>이산·연속·혼합·칸토어 분포를 “실수선 위의 확률측도” 하나로 묶고, 르베그 적분과 극한 정리, 그리고 그 위에 세운 수리통계학(가능도, 중요도 표본추출, 조건부 기댓값, 라오–블랙웰)을 시뮬레이션으로 확인합니다. 학부 고학년·대학원 수리통계 입문용입니다.</p>
+        <div class="tracks">
+          <a class="track" href="module4/why.html"><b>왜 측도론인가 (5단계)</b><span>푸시포워드, 기준 측도와 밀도, 칸토어 분포, 르베그 분해, 측도 0</span></a>
+          <a class="track" href="module4/limits.html"><b>적분과 극한 (4단계)</b><span>층 케이크 공식, MCT·DCT, 수렴의 종류, 강한 대수의 법칙</span></a>
+          <a class="track" href="module4/stats.html"><b>측도론 위의 수리통계학 (4단계)</b><span>가능도 = dP/dν, 중요도 표본추출, 사영으로서의 조건부 기댓값, 라오–블랙웰</span></a>
+          <a class="track" href="notes/lecture4.html"><b>강의노트 4</b><span>필요성, 완결성, 측도론과 통계 개념의 대응표, 연습문제 8개</span></a>
+        </div>
+      </div>
+    </article>
+  </section>
+</main>
+<footer class="site-footer"><p>확률변수 실험실. 모든 계산은 브라우저 안에서 이루어지며 인터넷 연결 없이도 동작합니다.</p></footer>
+
+<script src="vendor/d3.min.js"></script>
+<script src="js/rng.js"></script>
+<script src="js/distributions.js"></script>
+<script src="js/histogram.js"></script>
+<script src="js/chart.js"></script>
+<script>
+(function () {
+  const { dist: D, hist: H, rng: RNG } = window.RVL;
+  const el = document.getElementById('hero');
+  const chart = new RVL.HistChart(el, { height: 300, margin: { top: 10, right: 8, bottom: 30, left: 40 } });
+  const SEQ = [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000];
+  const SCENES = [['normal', { mu: 0, sigma: 1 }], ['gamma', { k: 2, theta: 1 }], ['mixture', { w: 0.5, delta: 4 }]];
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let scene = 0, idx = 0, stream, d, P, L, U;
+  function startScene() {
+    [d, P] = [D.get(SCENES[scene][0]), SCENES[scene][1]];
+    stream = new RNG.SampleStream((rng) => d.sampler(rng, P), 7 + scene);
+    [L, U] = H.continuousRange(d, P);
+    document.getElementById('hero-dist').textContent = d.name;
+    idx = reduce ? SEQ.length - 1 : 0;
+    chart.theoryShown = false;
+  }
+  function frame(showTheory) {
+    const n = SEQ[idx];
+    const s = stream.get(n);
+    const k = H.snapNested(H.ruleK('scott', s, n, L, U));
+    const bins = H.continuousBins(L, U, k);
+    const h = H.heights(H.binCounts(s, n, bins).counts, n, bins.width, 'density');
+    const pts = d3.range(400).map((i) => { const x = L + (U - L) * i / 399; return [x, d.pdf(x, P)]; });
+    const fmax = d3.max(pts, (p) => p[1]);
+    chart.render({
+      kind: 'continuous', bins, heights: h, mode: 'density', xDomain: [L, U],
+      yMax: Math.max(d3.max(h), fmax) * 1.08, yLabel: '', xLabel: '',
+      theory: { type: 'curve', points: pts }, showTheory, ariaLabel: `${d.name} 표본 ${n}개의 밀도 히스토그램`,
+    }, { duration: reduce ? 0 : 450, reveal: true });
+    document.getElementById('hero-n').textContent = d3.format(',')(n);
+    document.getElementById('hero-k').textContent = k;
+  }
+  function loop() {
+    if (idx < SEQ.length - 1) { frame(false); idx++; setTimeout(loop, 650); }
+    else { frame(true); if (!reduce) setTimeout(() => { scene = (scene + 1) % SCENES.length; startScene(); loop(); }, 4200); }
+  }
+  startScene();
+  loop();
+})();
+</script>
+<script src="js/core/shell.js"></script>
+</body>
+</html>

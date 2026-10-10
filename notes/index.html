@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>학습 노트 | 확률변수 실험실</title>
+<meta name="description" content="히스토그램에서 확률밀도함수·확률질량함수로 가는 과정의 개념 정리, 자주 하는 오해, 역사 이야기와 참고문헌.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header data-shell-header data-current="notes" data-root="../"></header>
+<main class="page">
+  <article class="prose">
+    <p class="crumb">모듈 1 학습 노트</p>
+    <h1 style="font-size:clamp(1.7rem,1.2rem+1.8vw,2.4rem)">히스토그램에서 확률밀도함수로</h1>
+    <div class="aside-note" style="margin-top:14px"><b>자세한 강의노트</b>가 따로 있습니다. 확률변수의 정의, 표본이 작을 때 막대가 고르지 않은 이유, 두 극한, PDF·PMF 계산 예제와 연습문제 11개를 시뮬레이션 그림과 함께 담았습니다. <a href="lecture.html">강의노트 1 열기</a> · 모듈 2는 <a href="lecture2.html">강의노트 2: 누적분포함수</a>, 모듈 3은 <a href="lecture3.html">강의노트 3: 확률변수</a>, 모듈 4는 <a href="lecture4.html">강의노트 4: 측도론과 확률분포</a>에 있습니다.</div>
+    <p>이 페이지는 핵심만 추린 요약입니다.</p>
+
+    <h2>1. 세로축은 세 가지로 그릴 수 있다</h2>
+    <p>표본 $x_1,\dots,x_n$을 폭이 $\Delta x$인 구간으로 나누고, 구간 $j$에 들어간 개수를 $c_j$라고 합시다. 막대의 높이는 세 가지로 정할 수 있습니다.</p>
+    $$\text{도수}=c_j,\qquad \text{상대도수}=\frac{c_j}{n},\qquad \text{밀도}=\frac{c_j}{n\,\Delta x}$$
+    <p><b>도수</b>는 n이 바뀌면 눈금 자체가 바뀌어서 표본 크기가 다른 히스토그램끼리 비교할 수 없습니다. <b>상대도수</b>는 이 문제를 해결하지만, 구간 폭을 반으로 줄이면 한 구간에 들어가는 비율도 대략 반이 되어 높이가 함께 줄어듭니다. 결국 구간 폭을 정하는 방식에 따라 모양이 달라 보입니다.</p>
+
+    <h2>2. 밀도로 그리면 면적이 확률이 된다</h2>
+    <p>높이를 상대도수 ÷ Δx로 정의하면 막대 하나의 면적은 정확히 그 구간의 상대도수가 됩니다.</p>
+    $$\text{면적}_j=\Delta x\times\frac{c_j}{n\,\Delta x}=\frac{c_j}{n},\qquad \sum_j \text{면적}_j=1$$
+    <p>이제 구간을 둘로 쪼개도 두 막대 높이의 평균이 원래 막대의 높이와 같으므로, 높이의 수준이 유지됩니다. 세로축의 단위는 ‘x 한 단위당 확률’입니다. 질량을 부피로 나눈 것이 밀도인 것처럼, 확률을 길이로 나눈 것이 확률밀도입니다.</p>
+
+    <h2>3. 두 극한이 함께 필요하다</h2>
+    <p>밀도 히스토그램이 하나의 곡선 $f(x)$에 다가가려면 두 가지가 동시에 일어나야 합니다.</p>
+    <ul>
+      <li><b>$n\to\infty$</b>: 대수의 법칙에 따라 각 구간의 상대도수가 그 구간의 확률 $P(a_j\le X&lt;b_j)$로 다가갑니다.</li>
+      <li><b>$\Delta x\to 0$</b>: 구간 확률을 폭으로 나눈 값이 한 점에서의 밀도 $f(x)$로 다가가고, 막대 면적의 합(리만 합)이 적분으로 바뀝니다.</li>
+    </ul>
+    $$\sum_j f(x_j^*)\,\Delta x\;\longrightarrow\;\int_{-\infty}^{\infty} f(x)\,dx=1$$
+    <p>그런데 n을 그대로 두고 Δx만 줄이면 한 구간에 들어가는 표본 수 $n\Delta x$가 작아져서 히스토그램이 오히려 들쭉날쭉해집니다. 반대로 Δx를 크게 두면 아무리 n을 늘려도 곡선의 굴곡이 뭉개집니다. 그래서 $n\to\infty$, $\Delta x\to 0$이면서 $n\Delta x\to\infty$가 되도록 함께 움직여야 합니다. Scott 규칙 $\Delta x = 3.49\,s\,n^{-1/3}$은 이 균형을 맞추는 대표적인 방법입니다.</p>
+
+    <h2>4. 곡선이 말해 주는 것</h2>
+    $$P(a\le X\le b)=\int_a^b f(x)\,dx$$
+    <ul>
+      <li>폭이 0인 구간의 면적은 0이므로 $P(X=a)=0$입니다. 그래서 연속형에서는 $P(a\le X\le b)=P(a&lt;X&lt;b)$입니다.</li>
+      <li>$f(x)$는 확률이 아니라 밀도이므로 1을 넘을 수 있습니다. 균등분포 $U(0,0.5)$의 밀도는 구간 전체에서 2입니다. 면적 $0.5\times 2=1$이므로 아무 문제가 없습니다.</li>
+    </ul>
+
+    <h2>5. 이산형은 왜 질량함수인가</h2>
+    <p>이산형 확률변수는 0, 1, 2, …처럼 띄엄띄엄한 값만 가집니다. 정수를 가운데에 둔 구간의 폭을 줄여 가면 그 구간의 상대도수는 거의 변하지 않는데(정수 하나만 들어 있으므로), 폭은 0으로 가므로 밀도는 끝없이 커집니다.</p>
+    $$\frac{c_x/n}{\Delta x}\approx\frac{p(x)}{\Delta x}\;\xrightarrow[\Delta x\to 0]{}\;\infty$$
+    <p>확률이 점 하나에 몰려 있기 때문입니다. 그래서 이산형은 밀도 대신 높이 자체가 확률인 <b>확률질량함수</b> $p(x)=P(X=x)$로 나타내고, 확률은 막대 높이의 합으로 계산합니다. 이 경우 끝점 포함 여부가 중요합니다. $P(X\le 3)$과 $P(X<3)$은 $P(X=3)$만큼 다릅니다.</p>
+
+    <h2>6. 자주 하는 오해</h2>
+    <div class="callout">
+      <h3>“f(x)의 값이 곧 확률이다”</h3>
+      <p>f(x)는 x 근처 단위 길이당 확률입니다. 아주 좁은 구간 $[x, x+h]$의 확률이 대략 $f(x)\,h$입니다. <a href="../module1/continuous.html?step=5&amp;d=uniform&amp;p=a:0;b:0.5&amp;n=10000&amp;seed=2026&amp;k=20&amp;y=density&amp;r=scott&amp;o=t&amp;iv=0.1,0.3,1,1">밀도가 2인 균등분포 열어 보기</a></p>
+    </div>
+    <div class="callout">
+      <h3>“연속형에서도 특정한 값이 나올 확률이 있다”</h3>
+      <p>표본에는 분명 특정한 값들이 나오지만, 미리 정한 한 값과 정확히 같을 확률은 0입니다. 구간을 한 점으로 좁히면 면적이 0으로 사라지는 것을 직접 확인해 보세요. <a href="../module1/continuous.html?step=5&amp;d=normal&amp;p=mu:0;sigma:1&amp;n=10000&amp;seed=2026&amp;k=20&amp;y=density&amp;r=scott&amp;o=t&amp;iv=-1,1,1,1">곡선 아래 면적 화면 열기</a></p>
+    </div>
+    <div class="callout">
+      <h3>“막대가 높으면 확률이 크다”</h3>
+      <p>밀도 히스토그램에서 높이는 폭과 함께 읽어야 합니다. 이산형에서 Δx = 1/20로 줄이면 막대 높이가 5를 넘지만, 면적의 합은 여전히 1입니다. <a href="../module1/discrete.html?step=3&amp;d=binomial&amp;p=N:10;p:0.3&amp;n=10000&amp;seed=2026&amp;m=20&amp;y=density">높이가 5를 넘는 이산형 밀도 히스토그램 열기</a></p>
+    </div>
+
+    <h2>7. 조금 더: 역사 이야기</h2>
+    <p>‘히스토그램’이라는 이름은 칼 피어슨(Karl Pearson)이 1890년대 강의에서 쓰기 시작한 것으로 알려져 있습니다. 피어슨은 1895년 논문에서 관측 자료의 히스토그램에 맞출 수 있는 곡선의 체계(피어슨 분포계)를 내놓았는데, 이것이 ‘데이터의 모양을 곡선으로 요약한다’는 생각을 대표합니다.</p>
+    <p>정규분포·포아송분포처럼 수학적 논리로 먼저 유도된 분포도 있지만, 파레토분포·와이블분포처럼 실제 데이터를 관찰하다가 모형화된 분포도 있습니다. 어느 쪽이든 마지막에는 데이터의 히스토그램과 비교해 확인합니다.</p>
+    <p>오늘날의 공리적 확률론(콜모고로프, 1933)은 반대 방향에서 출발합니다. 이산형과 연속형을 모두 포괄하는 누적분포함수(CDF)를 기본으로 놓고, 밀도 $f(x)$는 CDF를 미분해 얻는 것으로 봅니다. 이 사이트의 모듈 2에서 이 관점을 다룰 예정입니다.</p>
+    <p>구간 폭을 데이터로부터 정하는 규칙은 20세기에 정리되었습니다. Sturges(1926)는 구간 수를 $\lceil\log_2 n\rceil+1$로, Scott(1979)은 정규분포를 기준으로 오차를 최소로 하는 폭을, Freedman과 Diaconis(1981)는 이상값에 덜 민감한 사분위범위(IQR) 기반 폭을 제안했습니다. 히스토그램의 계단을 매끄러운 곡선으로 바꾸는 커널 밀도 추정은 Rosenblatt(1956)와 Parzen(1962)에서 시작되었습니다.</p>
+
+    <h2>참고문헌</h2>
+    <ul class="refs">
+      <li>Freedman, D., &amp; Diaconis, P. (1981). On the histogram as a density estimator: L₂ theory. <i>Zeitschrift für Wahrscheinlichkeitstheorie und verwandte Gebiete</i>, 57, 453–476.</li>
+      <li>Kolmogorov, A. N. (1933). <i>Grundbegriffe der Wahrscheinlichkeitsrechnung</i>. Berlin: Springer.</li>
+      <li>Parzen, E. (1962). On estimation of a probability density function and mode. <i>Annals of Mathematical Statistics</i>, 33(3), 1065–1076.</li>
+      <li>Pearson, K. (1895). Contributions to the mathematical theory of evolution. II. Skew variation in homogeneous material. <i>Philosophical Transactions of the Royal Society A</i>, 186, 343–414.</li>
+      <li>Rosenblatt, M. (1956). Remarks on some nonparametric estimates of a density function. <i>Annals of Mathematical Statistics</i>, 27(3), 832–837.</li>
+      <li>Scott, D. W. (1979). On optimal and data-based histograms. <i>Biometrika</i>, 66(3), 605–610.</li>
+      <li>Sturges, H. A. (1926). The choice of a class interval. <i>Journal of the American Statistical Association</i>, 21(153), 65–66.</li>
+    </ul>
+  </article>
+</main>
+<footer class="site-footer"><p>확률변수 실험실 학습 노트.</p></footer>
+<script src="../vendor/katex/katex.min.js"></script>
+<script src="../vendor/katex/auto-render.min.js"></script>
+<script>
+  renderMathInElement(document.body, { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }], throwOnError: false });
+</script>
+<script src="../js/core/shell.js"></script>
+</body>
+</html>

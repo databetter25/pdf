@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>강의노트 2: 누적분포함수 | 확률변수 실험실</title>
+<meta name="description" content="누적분포함수의 정의와 성질, 경험적 누적분포함수, 분위수, 역변환 표본추출, 혼합분포를 시뮬레이션 그림과 연습문제로 설명합니다.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../vendor/katex/katex.min.css">
+<link rel="stylesheet" href="../css/style.css">
+<style>
+  .lec-wrap { max-width: 1180px; margin: 0 auto; padding: 28px clamp(16px, 3vw, 32px) 64px; display: grid; gap: 32px; grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 1080px) { .lec-wrap { grid-template-columns: 240px minmax(0, 1fr); } }
+  .toc { font-size: 0.9rem; }
+  @media (min-width: 1080px) { .toc { position: sticky; top: 16px; align-self: start; max-height: calc(100vh - 32px); overflow: auto; } }
+  .toc h2 { font-family: var(--font-body); font-size: 0.86rem; color: var(--ink-3); font-weight: 600; margin-bottom: 6px; }
+  .toc ol { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--line); }
+  .toc a { display: block; padding: 4px 10px; color: var(--ink-2); text-decoration: none; margin-left: -2px; border-left: 2px solid transparent; line-height: 1.45; }
+  .toc a:hover { color: var(--ink); }
+  .toc a.active { color: var(--accent); border-left-color: var(--accent); font-weight: 600; }
+  .lecture { max-width: 74ch; }
+  .lecture > h1 { font-size: clamp(1.8rem, 1.2rem + 2vw, 2.6rem); line-height: 1.25; }
+  .lecture .sub { color: var(--ink-2); font-size: 1.05rem; margin: 10px 0 22px; }
+  .lecture h2 { font-size: 1.55rem; margin: 2.6em 0 0.5em; padding-top: 0.6em; border-top: 1px solid var(--line-strong); scroll-margin-top: 12px; }
+  .lecture h3 { font-size: 1.16rem; margin: 1.8em 0 0.4em; }
+  .lecture p, .lecture li { line-height: 1.85; }
+  .lecture .katex-display { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
+  .goals { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 18px; }
+  .goals h3 { margin: 0 0 4px; font-size: 1rem; }
+  .goals ul { margin: 0; padding-left: 1.2em; }
+  .def, .thm { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 1.2em 0; }
+  .thm { border-left-color: var(--series-3); }
+  .def > b:first-child, .thm > b:first-child { display: block; font-size: 0.86rem; color: var(--ink-3); margin-bottom: 2px; }
+  .try { display: flex; gap: 10px; align-items: baseline; background: var(--accent-soft); border-radius: 8px; padding: 10px 14px; margin: 1.2em 0; font-size: 0.95rem; }
+  .try b { flex: none; color: var(--accent); }
+  .try p { margin: 0; line-height: 1.7; }
+  .ex { border: 1px dashed var(--line-strong); border-radius: 8px; padding: 12px 16px; margin: 1.2em 0; }
+  .ex > b:first-child { display: block; font-size: 0.86rem; color: var(--ink-3); }
+  .lt { border-collapse: collapse; width: 100%; font-size: 0.93rem; margin: 1em 0; font-variant-numeric: tabular-nums; }
+  .lt th, .lt td { border-bottom: 1px solid var(--line); padding: 6px 10px; text-align: right; }
+  .lt th:first-child, .lt td:first-child { text-align: left; }
+  .lt thead th { color: var(--ink-3); font-weight: 600; font-size: 0.86rem; }
+  .lt.wide td, .lt.wide th { text-align: left; vertical-align: top; }
+  .tscroll { overflow-x: auto; }
+  figure.lf { margin: 1.4em 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px 8px; }
+  figure.lf figcaption { font-size: 0.88rem; color: var(--ink-2); margin-top: 6px; line-height: 1.6; }
+  figure.lf figcaption b { color: var(--ink); }
+  .lf-pair { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .lf-pair > div > p, .lfig-cell > p { margin: 0 0 2px; font-size: 0.84rem; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  .lfig-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+  .whisk line { stroke: var(--ink); stroke-width: 1.4; }
+  .exercises ol > li { margin-bottom: 1.2em; }
+  .exercises details { margin-top: 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; }
+  .exercises summary { cursor: pointer; color: var(--accent); font-weight: 600; font-size: 0.92rem; }
+  .print-btn { margin-top: 4px; }
+  @media print {
+    .site-header, .toc, .site-footer, .print-btn, .try { display: none !important; }
+    body { background: #fff; font-size: 11pt; }
+    .lec-wrap { display: block; padding: 0; }
+    .lecture { max-width: none; }
+    .lecture h2 { break-before: page; border-top: 0; }
+    figure.lf, .def, .thm, .ex, table { break-inside: avoid; }
+    .exercises details { border: 0; padding: 0; }
+    .exercises details > summary { display: none; }
+  }
+</style>
+</head>
+<body>
+<header data-shell-header data-current="lecture2" data-root="../"></header>
+
+<div class="lec-wrap">
+  <nav class="toc" aria-label="목차">
+    <h2>목차</h2>
+    <ol id="toc-list"></ol>
+  </nav>
+
+  <article class="lecture">
+    <p class="crumb">강의노트 모듈 2</p>
+    <h1>누적분포함수</h1>
+    <p class="sub">줄 세워 세기에서 출발해 넓이, 점프, 분위수, 역변환 표본추출까지</p>
+    <button type="button" class="print-btn ghost-btn" onclick="window.print()">인쇄하거나 PDF로 저장</button>
+
+    <div class="goals" style="margin-top:18px">
+      <h3>이 강의노트를 마치면</h3>
+      <ul>
+        <li>누적분포함수 $F(x)=P(X\le x)$를 정의하고 그 성질 네 가지를 말할 수 있습니다.</li>
+        <li>표본으로 경험적 누적분포함수(ECDF)를 그리고, n이 커질 때 이론 CDF로 다가가는 속도를 설명할 수 있습니다.</li>
+        <li>연속형에서 넓이와 높이, 기울기와 밀도의 관계를, 이산형에서 점프와 확률질량의 관계를 설명할 수 있습니다.</li>
+        <li>$F(b)-F(a)$로 구간 확률을 구하고, 이산형의 끝점 규칙을 정확히 쓸 수 있습니다.</li>
+        <li>분위수를 CDF에서 거꾸로 읽고, 균등난수로 원하는 분포의 난수를 만드는 역변환 표본추출을 설명할 수 있습니다.</li>
+      </ul>
+    </div>
+    <p>모듈 1에서는 확률을 연속형은 넓이(적분), 이산형은 높이의 합으로 따로 계산했습니다. 누적분포함수는 두 경우를 하나의 함수로 묶고, 표본에서 그릴 때 구간 폭을 고를 필요도 없습니다. 각 절 끝의 <b>사이트에서 해 보기</b>로 같은 내용을 시뮬레이션해 보세요.</p>
+
+    <h2 id="c1">1. 누적분포함수의 정의</h2>
+    <div class="def"><b>정의 1.1 누적분포함수</b>확률변수 $X$에 대해 모든 실수 $x$에서 $$F(x)=P(X\le x)$$ 로 정의한 함수를 $X$의 <b>누적분포함수</b>(cumulative distribution function, CDF)라고 합니다.</div>
+    <p>“x 이하일 확률”을 x를 왼쪽에서 오른쪽으로 옮기며 차례로 적어 둔 것입니다. 동전을 세 번 던져 나온 앞면 수 $X$라면 $P(X=0,1,2,3)=1/8,\,3/8,\,3/8,\,1/8$이므로</p>
+    $$F(x)=\begin{cases}0 & x\lt 0\\ 1/8 & 0\le x\lt 1\\ 4/8 & 1\le x\lt 2\\ 7/8 & 2\le x\lt 3\\ 1 & x\ge 3\end{cases}$$
+    <p>입니다. $F(1.7)=4/8$처럼 정수가 아닌 x에서도 값이 있다는 점에 주의하세요. 누적분포함수는 모든 실수에서 정의됩니다.</p>
+    <div class="thm"><b>성질 1.1 누적분포함수의 네 성질</b>
+      <ol style="margin:0;padding-left:1.2em">
+        <li>$0\le F(x)\le 1$</li>
+        <li>감소하지 않는다: $a\lt b$이면 $F(a)\le F(b)$</li>
+        <li>$\displaystyle\lim_{x\to-\infty}F(x)=0,\quad \lim_{x\to\infty}F(x)=1$</li>
+        <li>오른쪽 연속: $\displaystyle F(x)=\lim_{t\downarrow x}F(t)$</li>
+      </ol>
+    </div>
+    <p>거꾸로, 이 네 성질을 만족하는 함수는 모두 어떤 확률변수의 누적분포함수가 됩니다. 그래서 현대 확률론에서는 CDF를 분포를 나타내는 가장 기본적인 도구로 씁니다.</p>
+
+    <h2 id="c2">2. 표본으로 그리는 누적분포함수</h2>
+    <h3>2.1 줄 세워 세기</h3>
+    <div class="def"><b>정의 2.1 경험적 누적분포함수</b>표본 $x_1,\dots,x_n$에 대해 $$\hat F_n(x)=\frac{\#\{i: x_i\le x\}}{n}$$ 을 <b>경험적 누적분포함수</b>(ECDF)라고 합니다.</div>
+    <p>표본을 작은 값부터 줄 세우고, 각 값을 지날 때마다 $1/n$씩 올라가는 계단을 그리면 됩니다. 같은 값이 m번 나오면 그 자리에서 $m/n$만큼 올라갑니다. 모듈 1의 통학 시간 20명 자료라면 25분 이하는 9명이므로 $\hat F_{20}(25)=0.45$, 30분 이하는 13명이므로 $\hat F_{20}(30)=0.65$입니다.</p>
+    <p>히스토그램과 달리 <b>구간 폭을 고를 필요가 없습니다</b>. 같은 표본이면 ECDF는 하나로 정해집니다.</p>
+    <figure class="lf">
+      <div class="lf-pair">
+        <div><p>지수분포(λ = 1)에서 10개</p><div class="lfig" data-fig="ecdf-10"></div></div>
+        <div><p>같은 분포에서 1,000개</p><div class="lfig" data-fig="ecdf-1000"></div></div>
+      </div>
+      <figcaption><b>그림 2.1</b> 파란 계단은 표본의 ECDF, 초록 곡선은 이론 CDF $F(x)=1-e^{-x}$입니다. 표본이 많아지면 계단이 촘촘해져 곡선에 붙습니다.</figcaption>
+    </figure>
+    <h3>2.2 얼마나 빨리 다가가는가</h3>
+    <p>ECDF와 이론 CDF 사이의 가장 큰 차이를 $D_n=\sup_x|\hat F_n(x)-F(x)|$라고 합니다. Glivenko–Cantelli 정리에 따르면 $n\to\infty$에서 $D_n\to0$이고, 그 속도는 대략 $1/\sqrt n$입니다. DKW 부등식은 이를 구체적인 띠로 알려 줍니다.</p>
+    $$P\big(D_n\gt\varepsilon\big)\le 2e^{-2n\varepsilon^2}\quad\Longrightarrow\quad \varepsilon_n=\sqrt{\frac{\ln(2/\alpha)}{2n}}$$
+    <p>α = 0.05로 두면 n = 100에서 $\varepsilon\approx0.136$, n = 10,000에서 $\varepsilon\approx0.0136$입니다. 곧 ECDF ± ε의 띠가 이론 CDF 전체를 95% 이상의 확률로 감쌉니다. $D_n$은 콜모고로프–스미르노프 적합도 검정의 통계량이기도 합니다(n = 100에서 5% 기각값 약 0.134).</p>
+    <div class="try"><b>사이트에서 해 보기</b><p><a href="../module2/continuous.html?step=2">모듈 2 연속형 2단계</a>에서 ‘n을 키워 가며 보기’와 ‘최대 거리 보기’, ‘히스토그램과 비교’를 차례로 눌러 보세요.</p></div>
+
+    <h2 id="c3">3. 연속형: 넓이가 높이가 된다</h2>
+    <p>연속형에서는 $F(x)$가 밀도 곡선 아래 왼쪽 넓이입니다.</p>
+    $$F(x)=\int_{-\infty}^{x}f(t)\,dt,\qquad f(x)=F'(x)$$
+    <p>지수분포 $f(x)=\lambda e^{-\lambda x}$에서는 $F(x)=1-e^{-\lambda x}$이고, λ = 1이면 $F(1)\approx0.632$입니다. 미분하면 다시 $F'(x)=\lambda e^{-\lambda x}=f(x)$가 됩니다. 그래프로 보면 <b>CDF가 가파르게 오르는 곳</b>이 밀도가 큰 곳, 곧 확률이 몰린 곳입니다. 정규분포의 CDF는 평균에서 가장 가파르고, 지수분포의 CDF는 0에서 가장 가파릅니다.</p>
+    <figure class="lf">
+      <div class="lfig" data-fig="cdf-exp"></div>
+      <figcaption><b>그림 3.1</b> 지수분포(λ = 1)의 누적분포함수. x = 1에서 높이 $F(1)=1-e^{-1}\approx0.632$는 밀도 곡선 아래 [0, 1] 구간의 넓이와 같습니다.</figcaption>
+    </figure>
+    <div class="try"><b>사이트에서 해 보기</b><p><a href="../module2/continuous.html?step=3">3단계</a>에서 위 그래프의 넓이와 아래 그래프의 높이가 함께 움직이는 것을, <a href="../module2/continuous.html?step=4">4단계</a>에서 접선의 기울기가 밀도와 같아지는 것을 확인하세요.</p></div>
+
+    <h2 id="c4">4. 이산형: 계단과 점프</h2>
+    <p>이산형의 CDF는 계단 모양입니다. 값이 없는 곳에서는 평평하고, 값 $x$에서 정확히 $p(x)$만큼 뛰어오릅니다.</p>
+    $$F(x)-F(x^-)=P(X=x)=p(x),\qquad F(x^-)=\lim_{t\uparrow x}F(t)=P(X\lt x)$$
+    <figure class="lf">
+      <div class="lfig" data-fig="cdf-binom"></div>
+      <figcaption><b>그림 4.1</b> 이항분포 $B(10,0.3)$의 누적분포함수. 점프 위치의 닫힌 점(●)이 그 점에서의 값 $F(x)$이고, 열린 점(○)은 왼쪽에서 다가갈 때의 값 $F(x^-)$입니다.</figcaption>
+    </figure>
+    <div class="tscroll"><table class="lt">
+      <thead><tr><th>$x$</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr></thead>
+      <tbody>
+        <tr><td>$p(x)$</td><td>0.0282</td><td>0.1211</td><td>0.2335</td><td>0.2668</td><td>0.2001</td><td>0.1029</td><td>0.0368</td></tr>
+        <tr><td>$F(x)$</td><td>0.0282</td><td>0.1493</td><td>0.3828</td><td>0.6496</td><td>0.8497</td><td>0.9527</td><td>0.9894</td></tr>
+      </tbody>
+    </table></div>
+    <p>$F(3)=0.6496$이지만 $F(2.999)=F(2)=0.3828$입니다. 차이 0.2668이 정확히 $P(X=3)$입니다. 점프 위치에서 함수값이 위쪽(닫힌 점)이라는 것이 성질 1.1의 <b>오른쪽 연속</b>입니다. 부등호가 $\le$이기 때문에 $x=3$ 자신의 확률이 $F(3)$에 포함되는 것이지요.</p>
+    <div class="try"><b>사이트에서 해 보기</b><p><a href="../module2/discrete.html?step=3">이산형 3단계</a>에서 x를 2.999, 3, 3.001로 옮겨 보세요.</p></div>
+
+    <h2 id="c5">5. 구간 확률과 끝점 규칙</h2>
+    <p>어떤 분포든 왼쪽이 열리고 오른쪽이 닫힌 구간의 확률은 CDF 값의 차이입니다.</p>
+    $$P(a\lt X\le b)=F(b)-F(a)$$
+    <p>다른 꼴은 점프를 하나씩 더하거나 빼서 얻습니다. 연속형은 점프가 없으므로 네 값이 모두 같고, 이산형은 다릅니다. $X\sim B(10,0.3)$, $a=2$, $b=4$로 계산하면 다음과 같습니다.</p>
+    <div class="tscroll"><table class="lt wide">
+      <thead><tr><th>확률</th><th>CDF로 쓰면</th><th>값</th></tr></thead>
+      <tbody>
+        <tr><td>$P(2\le X\le 4)$</td><td>$F(4)-F(2^-)=F(4)-F(1)$</td><td>0.7004</td></tr>
+        <tr><td>$P(2\lt X\le 4)$</td><td>$F(4)-F(2)$</td><td>0.4669</td></tr>
+        <tr><td>$P(2\le X\lt 4)$</td><td>$F(4^-)-F(2^-)=F(3)-F(1)$</td><td>0.5003</td></tr>
+        <tr><td>$P(2\lt X\lt 4)$</td><td>$F(4^-)-F(2)=F(3)-F(2)$</td><td>0.2668</td></tr>
+      </tbody>
+    </table></div>
+    <div class="try"><b>사이트에서 해 보기</b><p><a href="../module2/discrete.html?step=4">이산형 4단계</a>는 네 확률을 그래프 위의 높이 차로 동시에 보여 줍니다.</p></div>
+
+    <h2 id="c6">6. 분위수: 거꾸로 읽기</h2>
+    <div class="def"><b>정의 6.1 분위수 함수</b>$0\lt p\lt 1$에 대해 $$Q(p)=\inf\{x: F(x)\ge p\}$$ 를 p 분위수라고 합니다. $Q(0.5)$가 중앙값, $Q(0.25)$와 $Q(0.75)$가 1·3사분위수입니다.</div>
+    <p>CDF 그래프에서 높이 p에 가로선을 긋고, 처음 만나는 곳의 x를 읽으면 됩니다. $F$가 연속이고 증가하면 그냥 역함수 $F^{-1}(p)$입니다.</p>
+    <ul>
+      <li>지수분포: $1-e^{-\lambda x}=p$를 풀면 $Q(p)=-\ln(1-p)/\lambda$. λ = 1의 중앙값은 $\ln2\approx0.693$, 90% 분위수는 $\ln10\approx2.303$입니다.</li>
+      <li>표준정규분포: 사분위수는 $\pm0.6745$, 사분위범위(IQR)는 약 1.349입니다.</li>
+      <li>이항분포 $B(10,0.3)$: $F(2)=0.3828\lt0.5\le F(3)=0.6496$이므로 중앙값은 3입니다. 가로선이 계단의 세로 부분에 닿으면 그 정수가 분위수입니다.</li>
+    </ul>
+    <p>표본에서는 $\hat Q(p)=x_{(\lceil np\rceil)}$($\lceil np\rceil$번째로 작은 값)로 정합니다. 통학 시간 20명의 표본 중앙값은 10번째 값 26분, 1사분위수는 5번째 값 21분입니다. 표본 분위수의 정의는 교재나 소프트웨어마다 조금씩 다르니, 어떤 정의를 쓰는지 밝혀 두는 것이 좋습니다.</p>
+
+    <h2 id="c7">7. 역변환 표본추출</h2>
+    <div class="thm"><b>정리 7.1 역변환 표본추출</b>$U\sim U(0,1)$이면 $X=Q(U)$의 누적분포함수는 $F$입니다.</div>
+    <p>$F$가 연속이고 증가하는 경우의 증명은 한 줄입니다.</p>
+    $$P(X\le x)=P\big(F^{-1}(U)\le x\big)=P\big(U\le F(x)\big)=F(x)$$
+    <p>곧 <b>CDF를 거꾸로 읽는 기계에 균등난수를 넣으면 원하는 분포의 난수가 나옵니다</b>. 지수분포라면 $X=-\ln(1-U)/\lambda$이고, 예를 들어 $u=0.7$이면 $x=-\ln0.3\approx1.204$입니다. 이 사이트의 지수·와이블·기하분포 난수가 이렇게 만들어지고, 이항·포아송은 누적확률표에서 $F(x)\ge u$인 첫 x를 찾는 같은 원리를 씁니다.</p>
+    <p>반대 방향도 성립합니다. $X$가 연속형이면 $F(X)\sim U(0,1)$입니다(확률적분변환). 적합도 검정과 시뮬레이션에서 자주 쓰는 성질입니다.</p>
+    <div class="try"><b>사이트에서 해 보기</b><p><a href="../module2/continuous.html?step=6">연속형 6단계</a>에서 균등난수를 하나씩, 그다음 1,000개를 보내 보세요. 모듈 3의 <a href="../module3/continuous.html?step=4">Y = −ln U</a>와 같은 이야기입니다.</p></div>
+
+    <h2 id="c8">8. CDF만이 할 수 있는 일: 혼합분포</h2>
+    <p>상담 전화가 30% 확률로 바로 연결되고, 나머지 70%는 지수분포(λ = 1)를 따르는 시간만큼 기다린다고 합시다. 대기 시간 $X$의 분포는</p>
+    $$F(x)=0.3+0.7\,(1-e^{-x}),\qquad x\ge0$$
+    <p>입니다. $P(X=0)=0.3$이라는 질량이 있으니 확률밀도함수만으로는 나타낼 수 없고, 0보다 큰 값은 연속적으로 퍼져 있으니 확률질량함수만으로도 나타낼 수 없습니다. 그러나 CDF는 0에서 0.3만큼 점프한 뒤 매끄럽게 올라가는 하나의 함수로 이 분포를 완전히 나타냅니다. 예를 들어 $F(1)\approx0.742$, $P(0\lt X\le1)=F(1)-F(0)\approx0.442$, 평균 대기 시간은 $0.7$분입니다.</p>
+    <figure class="lf">
+      <div class="lfig" data-fig="cdf-mixed"></div>
+      <figcaption><b>그림 8.1</b> 혼합분포의 누적분포함수. 0에서 높이 0.3의 점프(질량), 그 뒤로는 연속적으로 올라갑니다.</figcaption>
+    </figure>
+    <div class="try"><b>사이트에서 해 보기</b><p><a href="../module2/lab.html?d=waiting&amp;p=q:0.3;lambda:1&amp;n=1000&amp;seed=2026&amp;top=rug&amp;k=30&amp;o=ecb&amp;c=x&amp;cx=0.5">자유 실험실의 혼합분포</a>에서 q를 바꿔 보세요.</p></div>
+
+    <h2 id="c9">9. 정리와 자주 하는 오해</h2>
+    <ol>
+      <li>누적분포함수 $F(x)=P(X\le x)$는 이산형·연속형·혼합형을 모두 나타내는 하나의 도구입니다.</li>
+      <li>ECDF는 구간 폭 없이 표본만으로 그리며, $D_n$이 대략 $1/\sqrt n$으로 줄어들며 이론 CDF에 다가갑니다.</li>
+      <li>연속형은 $F'=f$, 이산형은 점프 크기 $=p(x)$입니다.</li>
+      <li>구간 확률의 기본형은 $P(a\lt X\le b)=F(b)-F(a)$입니다.</li>
+      <li>분위수는 CDF를 거꾸로 읽은 값이고, 균등난수를 분위수 함수에 넣으면 그 분포의 난수가 됩니다.</li>
+    </ol>
+    <div class="tscroll"><table class="lt wide">
+      <thead><tr><th>오해</th><th>바로잡기</th></tr></thead>
+      <tbody>
+        <tr><td>CDF는 이산형에서 정수에서만 정의된다</td><td>모든 실수에서 정의됩니다. 정수 사이에서 평평할 뿐입니다 (1장).</td></tr>
+        <tr><td>$F(x)$는 x에서의 확률이다</td><td>x <b>이하</b>일 확률입니다. x에서의 확률은 점프 크기 $F(x)-F(x^-)$입니다 (4장).</td></tr>
+        <tr><td>$P(a\le X\le b)=F(b)-F(a)$는 항상 맞다</td><td>이산형에서는 $F(b)-F(a^-)$입니다. $a$의 점프가 빠집니다 (5장).</td></tr>
+        <tr><td>CDF가 평평하면 그 구간의 밀도가 크다</td><td>반대입니다. 가파른 곳이 밀도가 큰 곳이고, 평평한 곳에는 확률이 없습니다 (3장).</td></tr>
+      </tbody>
+    </table></div>
+
+    <h2 id="ex">10. 연습문제</h2>
+    <div class="exercises">
+    <ol>
+      <li>주사위 눈 X의 누적분포함수를 식으로 쓰고 $F(3.5)$, $F(-1)$, $F(10)$을 구하시오.
+        <details><summary>풀이</summary><p>$F(x)=\lfloor x\rfloor/6$ ($1\le x\lt 6$), $x\lt1$이면 0, $x\ge6$이면 1입니다. $F(3.5)=3/6=0.5$, $F(-1)=0$, $F(10)=1$입니다.</p></details></li>
+      <li>표본 3, 1, 4, 1, 5의 ECDF를 그리고 $\hat F_5(1)$, $\hat F_5(3.9)$, 표본 중앙값을 구하시오.
+        <details><summary>풀이</summary><p>정렬하면 1, 1, 3, 4, 5입니다. $\hat F_5(1)=2/5$ (1이 두 번이라 계단이 0.4만큼 뜀), $\hat F_5(3.9)=3/5$, 중앙값은 $x_{(\lceil2.5\rceil)}=x_{(3)}=3$입니다.</p></details></li>
+      <li>$F(x)=x^2$ ($0\le x\le1$)일 때 밀도, $P(0.5\lt X\le 0.8)$, 중앙값을 구하시오.
+        <details><summary>풀이</summary><p>$f(x)=2x$, $P=0.64-0.25=0.39$, 중앙값은 $x^2=0.5$에서 $\sqrt{0.5}\approx0.707$입니다. 모듈 3의 max(u, v)가 바로 이 분포입니다.</p></details></li>
+      <li>$X\sim B(10,0.3)$일 때 4장의 표를 써서 $P(X\ge 3)$과 $P(1\lt X\lt 5)$를 CDF로 나타내고 계산하시오.
+        <details><summary>풀이</summary><p>$P(X\ge3)=1-F(2)=0.6172$, $P(1\lt X\lt5)=F(4)-F(1)=0.8497-0.1493=0.7004$입니다.</p></details></li>
+      <li>λ = 2인 지수분포의 중앙값과 3사분위수를 구하시오.
+        <details><summary>풀이</summary><p>$Q(p)=-\ln(1-p)/2$이므로 중앙값 $\ln2/2\approx0.347$, 3사분위수 $\ln4/2=\ln2\approx0.693$입니다.</p></details></li>
+      <li>균등난수 $u=0.95$를 써서 표준정규분포 난수와 λ = 1인 지수분포 난수를 하나씩 만드시오.
+        <details><summary>풀이</summary><p>표준정규: $\Phi^{-1}(0.95)\approx1.645$. 지수: $-\ln(1-0.95)=\ln20\approx2.996$입니다.</p></details></li>
+      <li>n = 400인 표본의 DKW 95% 띠 폭 ε을 구하고, ECDF가 $\hat F(1)=0.62$일 때 $F(1)$이 들어갈 범위를 쓰시오.
+        <details><summary>풀이</summary><p>$\varepsilon=\sqrt{\ln40/800}\approx0.068$이므로 $F(1)$은 대략 0.552 ~ 0.688 사이입니다 (모든 x에서 동시에 성립하는 95% 띠).</p></details></li>
+      <li>8장의 혼합분포에서 $P(X\le 0)$, $P(X\lt 0)$, $P(X\gt 2)$를 구하시오.
+        <details><summary>풀이</summary><p>$P(X\le0)=F(0)=0.3$, $P(X\lt0)=0$, $P(X\gt2)=1-F(2)=0.7e^{-2}\approx0.095$입니다.</p></details></li>
+    </ol>
+    </div>
+
+    <h2 id="refs2">더 읽을거리</h2>
+    <ul class="refs">
+      <li>Dvoretzky, A., Kiefer, J., &amp; Wolfowitz, J. (1956). Asymptotic minimax character of the sample distribution function and of the classical multinomial estimator. <i>Annals of Mathematical Statistics</i>, 27(3), 642–669.</li>
+      <li>Massart, P. (1990). The tight constant in the Dvoretzky–Kiefer–Wolfowitz inequality. <i>Annals of Probability</i>, 18(3), 1269–1283.</li>
+      <li>Devroye, L. (1986). <i>Non-Uniform Random Variate Generation</i>. Springer. (2장: 역변환 방법)</li>
+      <li>이 사이트의 <a href="lecture.html">강의노트 1</a>(히스토그램에서 확률분포로)과 <a href="lecture3.html">강의노트 3</a>(확률변수).</li>
+    </ul>
+  </article>
+</div>
+
+<footer class="site-footer"><p>확률변수 실험실 강의노트. 본문의 그림은 페이지를 열 때 이 사이트의 시드 고정 난수 생성기로 다시 그려집니다.</p></footer>
+
+<script src="../vendor/d3.min.js"></script>
+<script src="../vendor/katex/katex.min.js"></script>
+<script src="../vendor/katex/auto-render.min.js"></script>
+<script src="../js/rng.js"></script>
+<script src="../js/distributions.js"></script>
+<script src="../js/histogram.js"></script>
+<script src="../js/chart.js"></script>
+<script src="../js/ecdf.js"></script>
+<script src="../js/cdfchart.js"></script>
+<script src="../js/omega.js"></script>
+<script src="../js/sqdist.js"></script>
+<script src="../js/omegaview.js"></script>
+<script src="../js/core/shell.js"></script>
+<script src="../js/lecture.js"></script>
+<script>
+  renderMathInElement(document.querySelector('.lecture'), { delimiters: [{ left: '$$', right: '$$', display: true }, { left: '$', right: '$', display: false }], throwOnError: false });
+</script>
+</body>
+</html>
